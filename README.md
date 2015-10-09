@@ -128,6 +128,7 @@ myLibrary.consoleTrueOrError (
 
 * 0.1.0 Initial release
 * 0.2.0 Fix nested required object error
+* 0.2.2 Update errors handles
 
 
 ## Created by

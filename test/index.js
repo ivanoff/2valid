@@ -18,8 +18,8 @@ describe('#register', function() {
         },
         email: { type: "email" },
         metadata: { type: "object" },
-    }).should.equal(false);
-  });    
+    }).should.be.false;
+  });
 
 
   it('check good data', function() {
@@ -32,9 +32,8 @@ describe('#register', function() {
 
 
   it('register new bad model', function() {
-    vm.registerModel( )['undefined'].should.eql([ 'Name is not defined', 
-                                    'Model in "undefined" is not defined' ]);
-  });    
+    vm.registerModel( ).should.equal("Name is not defined");
+  });
 
 
   it('check bad data', function() {
@@ -43,8 +42,8 @@ describe('#register', function() {
       name  : { last: "Bagdanov", },
       metadata: { tt1:1, tt2:2 },
       createdAt : new Date(),
-    }).should.eql([ { '': 'Field "createdAt" not found in registered model',
-                    ',name': 'Field "first" is requied, but not found' } ]);
+    }).should.eql({ '': 'Field "createdAt" not found in registered model',
+      ',name': 'Field "first" is requied, but not found' });
   });    
 
     

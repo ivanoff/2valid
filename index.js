@@ -45,35 +45,17 @@ function deepLook ( obj, types ){
     return obj;
 }
 
-// Add error errorValue to errorName group
-exports.addError = function ( modelName, errorValue ) {
-    if( !errorValue ) return false;
-    if( typeof(errorValue) =='object' && !Object.keys(errorValue).length )  return false;
-    if( !this.errors[modelName] ) this.errors[modelName] = [];
-    this.errors[modelName].push(errorValue);
-}
-
-// Return list of errors or false
-exports.getErrors = function( modelName ) {
-    if( !modelName ) return this.errors;
-    if( !this.errors[modelName] ) return false;
-    var result = Object.keys(this.errors[modelName]).length? this.errors[modelName] : false;
-    return result;
-}
-
-// Register new model
+// Register new model. Return validate-me object
 // Parameters: modelName - name of the model, modelObject - model object
 exports.registerModel = function ( modelName, modelObject ) {
     // check for name, object and if model already exists
-    if ( ! modelName )   this.addError( modelName, 'Name is not defined' );
-    if ( ! modelObject ) this.addError( modelName, 'Model in "'+ modelName +'" is not defined' );
+    if ( ! modelName )   return( 'Name is not defined' );
+    if ( ! modelObject ) return( 'Model in "'+ modelName +'" is not defined' );
     if ( this.registeredModels[ modelName ] )
-                         this.addError( modelName, 'Model "'+ modelName +'" is already registered' );
-    if( !this.getErrors( modelName ) ) {
-        var o = Object.create( modelObject );
-        this.registeredModels[ modelName ] = deepLook( o, this.types );
-    }
-    return this.getErrors( modelName );
+                         return( 'Model "'+ modelName +'" is already registered' );
+    var o = Object.create( modelObject );
+    this.registeredModels[ modelName ] = deepLook( o, this.types );
+    return false;
 }
 
 // Show information of registered models. All registered models are stored in .registeredModels
@@ -102,6 +84,7 @@ exports.showModelsExpanded = function() {
 
 // check for required fields recursively
 function validateObjectRequired ( modelObject, entity, parents, errors ) {
+    if( !errors ) errors = {};
     for( var key in modelObject ){
         if ( !modelObject[ key ].type ) {
             validateObjectRequired ( 
@@ -118,6 +101,7 @@ function validateObjectRequired ( modelObject, entity, parents, errors ) {
 }
 // check for extra fields and match recursively
 function validateObjectEntity ( modelObject, entity, parents, errors ) {
+    if( !errors ) errors = {};
     for( var key in entity ){
         if ( !modelObject[ key ] ) {
             errors[parents] = 'Field "'+ key +'" not found in registered model';
@@ -135,11 +119,12 @@ function validateObjectEntity ( modelObject, entity, parents, errors ) {
 // Check if entity pass modelName's validation
 exports.validate = function( modelName, entity ) {
     var modelObject = this.registeredModels[ modelName ];
-    this.addError( modelName, validateObjectRequired ( 
+    var errors = validateObjectRequired ( 
                     modelObject, entity, [],
-                    validateObjectEntity ( modelObject, entity, [], {} ) 
-                 ));
-    return this.getErrors( modelName );
+                    validateObjectEntity ( modelObject, entity, [] ) 
+                 );
+    if( !Object.keys(errors).length ) errors = false;
+    return errors;
 }
 
 // "Forget" about all registered models
