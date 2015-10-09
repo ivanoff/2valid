@@ -7,78 +7,77 @@
 'use strict';
 
 // All avaible type defenitions are in types.js
-var Types = require( './types' );
-exports.types = Types.list;
+exports.types = require( './types' );
 
 exports.errors = [];
 exports.registeredModels = [];
 
-function deepLook ( o, types ){
-    for( var key in o ){
-        console.log( '  "' + key + '" : "' + o[key].type + '"');
-        // check type and if it's in Types
-        if ( !o[key].type ) {
-            o[key] = deepLook( o[key], types );
-//            o[key].type = 'object';
+// Check new model before registration
+function deepLook ( obj, types ){
+    for( var key in obj ){
+        if ( !obj[key].type ) {
+            obj[key] = deepLook( obj[key], types );
         } else {
-            if ( ! types[ o[key].type ] ) {
-                throw new Error('No type "'+ o[key].type +'" in Types: key "'+ key +'"');
+            if ( ! types[ obj[key].type ] ) {
+                throw new Error('No type "'+ obj[key].type +'" in Types: key "'+ key +'"');
             }
             // check for range in new object
-            if ( typeof o[key].min !== 'undefined' 
-                    && typeof types[ o[key].type ].min !== 'undefined' 
-                    && types[ o[key].type ].min > o[key].min ) {
-                throw new Error('In model "'+ modelName +'", key "'+ key +'" minimal value ( '+ o[key].min +' ) is less than acceptable minimal in Types'
-                                + ' ( ' + types[ o[key].type ].min + ' )' );
+            if ( typeof obj[key].min !== 'undefined' 
+                    && typeof types[ obj[key].type ].min !== 'undefined' 
+                    && types[ obj[key].type ].min > obj[key].min ) {
+                throw new Error('In model "'+ modelName +'", key "'+ key +'" minimal value ( '+ obj[key].min +' ) is less than acceptable minimal in Types'
+                                + ' ( ' + types[ obj[key].type ].min + ' )' );
             }
-            if ( typeof o[key].max !== 'undefined' 
-                    && typeof types[ o[key].type ].max !== 'undefined' 
-                    && types[ o[key].type ].max < o[key].max ) {
-                throw new Error('In model "'+ modelName +'", key "'+ key +'" maximal value ( '+ o[key].max +' ) is in excess of maximal acceptable value in Types'
-                                + ' ( ' + types[ o[key].type ].min + ' )' );
+            if ( typeof obj[key].max !== 'undefined' 
+                    && typeof types[ obj[key].type ].max !== 'undefined' 
+                    && types[ obj[key].type ].max < obj[key].max ) {
+                throw new Error('In model "'+ modelName +'", key "'+ key +'" maximal value ( '+ obj[key].max +' ) is in excess of maximal acceptable value in Types'
+                                + ' ( ' + types[ obj[key].type ].min + ' )' );
             }
         }
         // get properties and methods from Types
-        for( var key_parent in types[ o[key].type ] ){
-            if ( !o[ key ][ key_parent ] ) {
-                o[ key ][ key_parent ] = types[ o[key].type ][ key_parent ];
+        for( var key_parent in types[ obj[key].type ] ){
+            if ( !obj[ key ][ key_parent ] ) {
+                obj[ key ][ key_parent ] = types[ obj[key].type ][ key_parent ];
             }
         }
     }
-    return o;
+    return obj;
 }
 
+// Add error errorValue to errorName group
+exports.addError = function ( modelName, errorValue ) {
+    if( !errorValue ) return false;
+    if( typeof(errorValue) =='object' && !Object.keys(errorValue).length )  return false;
+    if( !this.errors[modelName] ) this.errors[modelName] = [];
+    this.errors[modelName].push(errorValue);
+}
 
-// Register new model. 
+// Return list of errors or false
+exports.getErrors = function( modelName ) {
+    if( !modelName ) return this.errors;
+    if( !this.errors[modelName] ) return false;
+    var result = Object.keys(this.errors[modelName]).length? this.errors[modelName] : false;
+    return result;
+}
+
+// Register new model
 // Parameters: modelName - name of the model, modelObject - model object
-//      .registeredModels property has information about all registered modules
-//      Each module must have unique name of the model till .dispose them
-// Usage:
-//      myLibrary.registerModel( "user", {
-//        id:   { type: "uuid", required: true },        // property “id” must be uuid
-//        name: { type: "string", min: 4, max: 128 },    // property “name” must be String and contain 4-128
-//      } );
 exports.registerModel = function ( modelName, modelObject ) {
     // check for name, object and if model already exists
-    if ( ! modelName ) {
-        throw new Error('Name is undefined');
+    if ( ! modelName )   this.addError( modelName, 'Name is not defined' );
+    if ( ! modelObject ) this.addError( modelName, 'Model in "'+ modelName +'" is not defined' );
+    if ( this.registeredModels[ modelName ] )
+                         this.addError( modelName, 'Model "'+ modelName +'" is already registered' );
+    if( !this.getErrors( modelName ) ) {
+        var o = Object.create( modelObject );
+        this.registeredModels[ modelName ] = deepLook( o, this.types );
     }
-    if ( ! modelObject ) {
-        throw new Error('Model in "'+ modelName +'" is undefined');
-    }
-    if ( this.registeredModels[ modelName ] ) {
-        throw new Error('Model "'+ modelName +'" is already registered');
-    }
-    var o = Object.create( modelObject );
-    this.registeredModels[ modelName ] = deepLook( o, this.types );
-    console.log( '+Model "' + modelName +'" was registered');
-    return 1;
+    return this.getErrors( modelName );
 }
 
 // Show information of registered models. All registered models are stored in .registeredModels
 // If params.displayEverything is true, module will show additional info
-// Usage:
-//      myLibrary.showModels();
 exports.showModels = function( params ) {
     if ( typeof( params ) === 'undefined' ) params = { displayEverything: false };
     if ( ! this.registeredModels ) {
@@ -97,84 +96,55 @@ exports.showModels = function( params ) {
 }
 
 // Show expanded information of registared models
-// Usage:
-//      myLibrary.showModelsExpanded();
 exports.showModelsExpanded = function() {
     this.showModels( { displayEverything: true } );
 }
 
-
-function validateObjectRequired ( modelObject, entity ) {
-    var errors = [];
-    // check for required field
+// check for required fields recursively
+function validateObjectRequired ( modelObject, entity, parents, errors ) {
     for( var key in modelObject ){
         if ( !modelObject[ key ].type ) {
-            errors = errors.concat( validateObjectRequired ( modelObject[ key ], entity ) )
+            validateObjectRequired ( 
+                    modelObject[ key ], 
+                    entity? entity[ key ] : {}, 
+                    parents? [ parents, key ] : key,
+                    errors )
         } 
-        else if( modelObject[ key ].required && !entity[ key ] ) {
-            errors = errors.concat( 'Field "'+ key +'" is requied, but not found' );
+        else if( modelObject[ key ].required && ( !entity || !entity[ key ] ) ) {
+            errors[parents] = 'Field "'+ key +'" is requied, but not found';
         }
     }
     return errors;
 }
-
-function validateObjectEntity ( modelObject, entity ) {
-    var errors = [];
+// check for extra fields and match recursively
+function validateObjectEntity ( modelObject, entity, parents, errors ) {
     for( var key in entity ){
         if ( !modelObject[ key ] ) {
-            errors = errors.concat( [ 'Field "'+ key +'" not found in registered model' ] );
+            errors[parents] = 'Field "'+ key +'" not found in registered model';
         }
         else if ( !modelObject[ key ].type ) {
-            errors = errors.concat( validateObjectEntity ( modelObject[ key ], entity[ key ] ) )
+            validateObjectEntity ( modelObject[ key ], entity[ key ], parents? [ parents, key ] : key, errors )
         } 
         else if( !modelObject[ key ].check( entity[ key ] ) ) {
-            errors = errors.concat( [ 'Field "'+ key +'" not matched with type "'+ modelObject[ key ].type +'"' ] );
+            errors[parents] = 'Field "'+ key +'" not matched with type "'+ modelObject[ key ].type +'"';
         }
     }
-    return errors;
-}
-
-function validateObject ( modelObject, entity ) {
-    var errors = validateObjectRequired ( modelObject, entity );
-    errors = errors.concat( validateObjectEntity ( modelObject, entity ) );
     return errors;
 }
 
 // Check if entity pass modelName's validation
-// Usage:
-//      myLibrary.validate( "user", { id : "61cecfb4-da33-4b15-aa10-f1c6be81ec53", name : "Dimitry Ivanov" }) 
 exports.validate = function( modelName, entity ) {
     var modelObject = this.registeredModels[ modelName ];
-    this.errors = validateObject( modelObject, entity );
-    return !this.errors.length;
+    this.addError( modelName, validateObjectRequired ( 
+                    modelObject, entity, [],
+                    validateObjectEntity ( modelObject, entity, [], {} ) 
+                 ));
+    return this.getErrors( modelName );
 }
 
 // "Forget" about all registered models
-// Usage:
-//     myLibrary.dispose();
 exports.dispose = function() {
     this.registeredModels = [];
-    console.log( 'All modules are removed' );
+    return 1;
 }
 
-// In console show all accumulated errors, and erase them
-// Usage:
-//      myLibrary.showErrors();
-exports.showErrors = function() {
-    console.log( 'Errors:' );
-    console.log( '  ' + this.errors.join("\n  ") );
-    this.errors = [];
-}
-
-// If validated is true, then show "true" in console, show all errors, otherwise
-// Usage:
-//      myLibrary.consoleTrueOrError ( 
-//          myLibrary.validate( "user", { id : "61cecfb4-da33-4b15-aa10-f1c6be81ec53", name : "Dimitry Ivanov", }) 
-//      );
-exports.consoleTrueOrError = function( validated ) {
-    if ( validated ) { 
-        console.log( 'true' )
-    } else { 
-        this.showErrors() 
-    }
-}

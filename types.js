@@ -1,10 +1,6 @@
-/****
- List of types to validate
- Created by:
-    Dimitry, 2@ivanoff.org.ua
-****/
+/**** List of types to validate ****/
 
-exports.list = {
+module.exports = {
 
     uuid : { // uuid methods. uuid.check returns true if parameter looks like UUID, false otherwise 
         check : function( uuid ){

@@ -41,8 +41,6 @@ vm.consoleTrueOrError ( valid );
 -  showModelsFull() - show full information of registered model
 -  dispose() - remove all registered modelNames
 -  errors - list of errors
--  showErrors() - show all errors and clear list of errors
--  consoleTrueOrError() - show true or list of errors in console
 "Types" properties located in types.js and included description to validate of each type 
 ( "min" and "max" properties, add "check" method to check validation ).
 
@@ -126,48 +124,10 @@ myLibrary.consoleTrueOrError (
         myLibrary.consoleTrueOrError ( myLibrary.validate( "user", { id : "61cecfb4-da43-4b65-aaa0-f1c3be81ec53", name : "ASNKJW oew  owek rewRWIWJG OERGMLkf gsojejrwoeg ke r gerEGIOJWgij i4 ggr" }) );
 
 
-## Output example
-$ node -v
-v0.10.40
-
-$ node models.js 
-Try to create model "user" with fields and types:
-  "id" : "uuid"
-  "name" : "string"
-  "createdAt" : "date"
-  "counter" : "number"
-+Model "user" was registered
-Try to create model "user2" with fields and types:
-  "id" : "uuid"
-  "name" : "string"
-+Model "user2" was registered
-List of registered models
-  - user
-      id : uuid
-      name : string
-      createdAt : date
-      counter : number
-  - user2
-      id : uuid
-      name : string
-Check 1:
-true
-Check 2:
-true
-Check 3:
-Errors:
-  Required field "id" not found in model "user"
-Check 4:
-Errors:
-  Field "id" not matched with type "uuid" in model "user"
-  Field "imya" not found in model "user"
-All modules are removed
-There is no registered models
-
-
 ## Release History
 
 * 0.1.0 Initial release
+* 0.2.0 Fix nested required object error
 
 
 ## Created by
