@@ -31,6 +31,27 @@ describe('#register', function() {
   });    
 
 
+  it('register model with match', function() {
+    vm.registerModel( "user_match", {
+        name: { type: "string", match : /^[A-Z]+$/ }
+    }).should.be.false;
+  });
+
+
+  it('check match data', function() {
+    vm.validate( "user_match", 
+        { name  : "ILIKECAPS" }
+    ).should.equal(false);
+  });    
+
+
+  it('check bad match data', function() {
+    vm.validate( "user_match", 
+        { name  : "ILIKEcAPS" }
+    ).should.eql({ '': 'Field "name" not matched with type "string"' });
+  });    
+
+
   it('register new bad model', function() {
     vm.registerModel( ).should.equal("Name is not defined");
   });
