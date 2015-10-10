@@ -130,6 +130,7 @@ myLibrary.consoleTrueOrError (
 * 0.2.0 Fix nested required object error
 * 0.2.2 Update errors handles
 * 0.2.4 Add match ability to string
+* 0.2.10 Split number to integer and float, add password type
 
 
 ## Created by

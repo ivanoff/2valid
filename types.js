@@ -22,7 +22,18 @@ module.exports = {
         },
     },
 
-    number : { // number properties and methods
+    integer : { // number properties and methods
+        min   : -Infinity,   // number.min Minimum number value
+        max   : Infinity,    // number.max Maximum number value
+        check : function( number ){ // number.check check number type and size
+            return typeof number === 'number' 
+                    && number >= this.min 
+                    && number <= this.max
+                    && !((""+number).match(/\./));
+        },
+    },
+
+    float : { // number properties and methods
         min   : -Infinity,   // number.min Minimum number value
         max   : Infinity,    // number.max Maximum number value
         check : function( number ){ // number.check check number type and size
@@ -42,6 +53,19 @@ module.exports = {
         match : /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]+/i,
         check : function( email ){  // date.check Maximum length of the string
             return email.match( this.match );
+        },
+    },
+
+    password : {
+        min   : 4,          // minimum length of the password
+        max   : Infinity,
+        // at least one caps and one small letter, digit and special
+        match : /^.*(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).*$/,
+        check : function( password ) {   // check password type and size
+            return typeof password === 'string'
+                    && password.length >= this.min 
+                    && password.length <= this.max 
+                    && password.match( this.match ) 
         },
     },
 

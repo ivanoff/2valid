@@ -52,6 +52,28 @@ describe('#register', function() {
   });    
 
 
+  it('register model with integer and password', function() {
+    vm.registerModel( "user_int", {
+        id:   { type: "integer" },
+        pass: { type: "password" },
+    }).should.be.false;
+  });
+
+
+  it('check int and password data', function() {
+    vm.validate( "user_int", 
+        { id : 123, pass : "R2d=" }
+    ).should.equal(false);
+  });    
+
+
+  it('check bad int and password data', function() {
+    vm.validate( "user_int", 
+        { id : 123.1, pass : "r2D2" }
+    ).should.eql({ '': 'Field "id" not matched with type "integer"',
+            "": "Field \"pass\" not matched with type \"password\"" });
+  });    
+
   it('register new bad model', function() {
     vm.registerModel( ).should.equal("Name is not defined");
   });

@@ -1,6 +1,6 @@
 {
   "name": "validate-me",
-  "version": "0.2.4",
+  "version": "0.2.10",
   "description": "JavaScript data structure validator",
   "main": "index.js",
   "scripts": {
