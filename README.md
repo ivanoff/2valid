@@ -133,6 +133,11 @@ myLibrary.consoleTrueOrError (
 * 0.2.10 Split number to integer and float, add password type
 
 
+## To-Do
+* Return wishes to validate ( ex. "Password must contain 4 digits and 4 most popular actor's names" )
+* Try to find a hint to validate ( ex. "do you watn to find size, not a 'XXze'?" )
+
+
 ## Created by
 
 Dimitry, 2@ivanoff.org.ua
