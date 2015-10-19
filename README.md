@@ -53,6 +53,7 @@ to check new inserted type. Also you can add "min" and "max" properties to check
 For example, new type "password". It type must contains minimum 4 chars: at least one lower 
 and one upper case, digit and special chars.
 Add code below to types.js in list property:
+```javascript
 password : {
     min   : 4,         // string.min Minimum length of the string
     max   : Infinity,  // string.max Maximum length of the string
@@ -67,11 +68,12 @@ password : {
             return false;
     },
 },
-
+```
 
 ## Register model
 For register model you need to use registerModel method.
 
+```javascript
 myLibrary.registerModel( "user_password", {
   id:   { type: "uuid", required: true },     // property “id” must be uuid
     // property “name” must be String and contain 4-128
@@ -80,37 +82,52 @@ myLibrary.registerModel( "user_password", {
     // at least one lower and one upper case, digit and special chars.
   password: { type: "password", max: 128, required: true },       
 } );
+```
 
 
 ## Validate object  
 If you want validate new object, then insert before "myLibrary.dispose();" line:
+```javascript
 myLibrary.consoleTrueOrError ( myLibrary.validate( "user", "entity" ) );
 
 For example, validate based on "user" model:
 myLibrary.consoleTrueOrError ( 
     myLibrary.validate( "user", { id : "61cecfb4-da33-4b15-aa10-f1c6be81ec53", name : "Dimitry Ivanov", password : "A1z!" }) 
 );
+```
 
 
 ## Exceptions
 - Name is undefined
+```javascript
     myLibrary.registerModel( "Name", { id: { type: "uuid", required: true } } );
+```
 
 - Model in "modelName" is undefined
+```javascript
     myLibrary.registerModel( "modelName", NaN );
+```
 
 - Model "modelName" is already registered
+```javascript
     myLibrary.registerModel( "modelName", { id: { type: "uuid", min: 1, max: 5, required: true } } );
     myLibrary.registerModel( "modelName", { id: { type: "name" } } );
+```
 
 - No field "name" in key "name" in model "modelName"
+```javascript
     myLibrary.consoleTrueOrError ( myLibrary.validate( "modelName", { name  : "Alex Bardanov" }) );
+```
 
 - No type field exception
+```javascript
     myLibrary.registerModel( "name_exception", { date: { parameter: "date" } } );
+```
 
 - No guid type exception
+```javascript
     myLibrary.registerModel( "name_exception", { id: { type: "guid" } } );
+```
 
 
 ## Errors
@@ -118,11 +135,17 @@ myLibrary.consoleTrueOrError (
 - Field "key" not found in model "modelName"
 - Field "key" not matched with type "type" in model "modelName"
 - 2 errors: Field not matched with type exception and Field not found
+```javascript
         myLibrary.consoleTrueOrError ( myLibrary.validate( "user", { id : "1cecfb4-da43-4b65-aaa0-f1c3be81ec53", imya : "Alex Bardanov" }) );
+```
 - Size minimum check error
+```javascript
         myLibrary.consoleTrueOrError ( myLibrary.validate( "user", { id : "61cecfb4-da43-4b65-aaa0-f1c3be81ec53", name : "" }) );
+```
 - Size maximum check error
+```javascript
         myLibrary.consoleTrueOrError ( myLibrary.validate( "user", { id : "61cecfb4-da43-4b65-aaa0-f1c3be81ec53", name : "ASNKJW oew  owek rewRWIWJG OERGMLkf gsojejrwoeg ke r gerEGIOJWgij i4 ggr" }) );
+```
 
 
 ## Release History
