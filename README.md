@@ -100,33 +100,33 @@ myLibrary.consoleTrueOrError (
 ## Exceptions
 - Name is undefined
 ```javascript
-    myLibrary.registerModel( "Name", { id: { type: "uuid", required: true } } );
+myLibrary.registerModel( "Name", { id: { type: "uuid", required: true } } );
 ```
 
 - Model in "modelName" is undefined
 ```javascript
-    myLibrary.registerModel( "modelName", NaN );
+myLibrary.registerModel( "modelName", NaN );
 ```
 
 - Model "modelName" is already registered
 ```javascript
-    myLibrary.registerModel( "modelName", { id: { type: "uuid", min: 1, max: 5, required: true } } );
-    myLibrary.registerModel( "modelName", { id: { type: "name" } } );
+myLibrary.registerModel( "modelName", { id: { type: "uuid", min: 1, max: 5, required: true } } );
+myLibrary.registerModel( "modelName", { id: { type: "name" } } );
 ```
 
 - No field "name" in key "name" in model "modelName"
 ```javascript
-    myLibrary.consoleTrueOrError ( myLibrary.validate( "modelName", { name  : "Alex Bardanov" }) );
+myLibrary.consoleTrueOrError ( myLibrary.validate( "modelName", { name  : "Alex Bardanov" }) );
 ```
 
 - No type field exception
 ```javascript
-    myLibrary.registerModel( "name_exception", { date: { parameter: "date" } } );
+myLibrary.registerModel( "name_exception", { date: { parameter: "date" } } );
 ```
 
 - No guid type exception
 ```javascript
-    myLibrary.registerModel( "name_exception", { id: { type: "guid" } } );
+myLibrary.registerModel( "name_exception", { id: { type: "guid" } } );
 ```
 
 
@@ -136,15 +136,15 @@ myLibrary.consoleTrueOrError (
 - Field "key" not matched with type "type" in model "modelName"
 - 2 errors: Field not matched with type exception and Field not found
 ```javascript
-        myLibrary.consoleTrueOrError ( myLibrary.validate( "user", { id : "1cecfb4-da43-4b65-aaa0-f1c3be81ec53", imya : "Alex Bardanov" }) );
+myLibrary.consoleTrueOrError ( myLibrary.validate( "user", { id : "1cecfb4-da43-4b65-aaa0-f1c3be81ec53", imya : "Alex Bardanov" }) );
 ```
 - Size minimum check error
 ```javascript
-        myLibrary.consoleTrueOrError ( myLibrary.validate( "user", { id : "61cecfb4-da43-4b65-aaa0-f1c3be81ec53", name : "" }) );
+myLibrary.consoleTrueOrError ( myLibrary.validate( "user", { id : "61cecfb4-da43-4b65-aaa0-f1c3be81ec53", name : "" }) );
 ```
 - Size maximum check error
 ```javascript
-        myLibrary.consoleTrueOrError ( myLibrary.validate( "user", { id : "61cecfb4-da43-4b65-aaa0-f1c3be81ec53", name : "ASNKJW oew  owek rewRWIWJG OERGMLkf gsojejrwoeg ke r gerEGIOJWgij i4 ggr" }) );
+myLibrary.consoleTrueOrError ( myLibrary.validate( "user", { id : "61cecfb4-da43-4b65-aaa0-f1c3be81ec53", name : "ASNKJW oew  owek rewRWIWJG OERGMLkf gsojejrwoeg ke r gerEGIOJWgij i4 ggr" }) );
 ```
 
 
