@@ -23,18 +23,13 @@ describe('Validate-me tests', function () {
                 email: { type: "email" },
                 metadata: { type: "object" },
             }).should.be.false;
-        });
 
-
-        it('check good data', function() {
             this.vm.validate( "user", {
                 id    : "61cecfb4-da43-4b65-aaa0-f1c3be81ec53",
                 name  : { first : "Alex", last: "Bagdanov", },
                 metadata: { tt1:1, tt2:2 },
             }).should.equal(false);
-        });    
 
-        it('check bad data', function() {
             this.vm.validate( "user", {
                 id    : "61cecfb4-da43-4b65-aaa0-f1c3be81ec53",
                 name  : { last: "Bagdanov", },
@@ -43,6 +38,8 @@ describe('Validate-me tests', function () {
             }).should.eql({ '': 'Field "createdAt" not found in registered model',
                 ',name': 'Field "first" is requied, but not found' });
         });    
+
+
     });
 
 
@@ -52,19 +49,15 @@ describe('Validate-me tests', function () {
             this.vm.registerModel( "user_match", {
                 name: { type: "string", match : /^[A-Z]+$/ }
             }).should.be.false;
-        });
 
-        it('check match data', function() {
             this.vm.validate( "user_match", 
                 { name  : "ILIKECAPS" }
             ).should.equal(false);
-        });    
 
-        it('check bad match data', function() {
             this.vm.validate( "user_match", 
                 { name  : "ILIKEcAPS" }
             ).should.eql({ '': 'Field "name" not matched with type "string"' });
-        });    
+        });
 
     });
 
@@ -75,19 +68,20 @@ describe('Validate-me tests', function () {
             this.vm.registerModel( "user_int", {
                 id:   { type: "integer" },
             }).should.be.false;
+
+            it('check integer data', function() {
+                this.vm.validate( "user_int", 
+                    { id : 123 }
+                ).should.equal(false);
+            });    
+
+            it('check bad integer data', function() {
+                this.vm.validate( "user_int", 
+                    { id : 123.1 }
+                ).should.eql({ '': 'Field "id" not matched with type "integer"' });
+            });    
         });
 
-        it('check integer data', function() {
-            this.vm.validate( "user_int", 
-                { id : 123 }
-            ).should.equal(false);
-        });    
-
-        it('check bad integer data', function() {
-            this.vm.validate( "user_int", 
-                { id : 123.1 }
-            ).should.eql({ '': 'Field "id" not matched with type "integer"' });
-        });    
 
     });
 
@@ -98,15 +92,11 @@ describe('Validate-me tests', function () {
             this.vm.registerModel( "user_pass", {
                 pass: { type: "password" },
             }).should.be.false;
-        });
 
-        it('check password data', function() {
             this.vm.validate( "user_pass", 
                 { pass : "R2d=" }
             ).should.equal(false);
-        });    
 
-        it('check bad password data', function() {
             this.vm.validate( "user_pass", 
                 { pass : "r2D2" }
             ).should.eql({ "": "Field \"pass\" not matched with type \"password\"" });
