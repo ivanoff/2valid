@@ -10,6 +10,7 @@ npm install validate-me --save
 
 ## Usage
 
+```javascript
 vm = require( 'validate-me' );
 
 vm.registerModel( "user", {
@@ -25,7 +26,7 @@ var valid = vm.validate( "user", {
     }) 
 
 vm.consoleTrueOrError ( valid );
-
+```
 
 ## Tests
 
