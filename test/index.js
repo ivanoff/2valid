@@ -105,6 +105,25 @@ describe('Validate-me tests', function () {
     });
 
 
+    describe('Model to validate md5', function() {
+
+        it('register model with md5', function() {
+            this.vm.registerModel( "user_pass_md5", {
+                pass: { type: "md5" },
+            }).should.be.false;
+
+            this.vm.validate( "user_pass_md5", 
+                { pass : "4124bc0a9335c27f086f24ba207a4912" }
+            ).should.equal(false);
+
+            this.vm.validate( "user_pass_md5", 
+                { pass : "r2D2" }
+            ).should.eql({ "": "Field \"pass\" not matched with type \"md5\"" });
+        });
+
+    });
+
+
     describe('Errors while registration', function() {
         it('register new bad model', function() {
             this.vm.registerModel( ).should.equal("Name is not defined");

@@ -69,6 +69,13 @@ module.exports = {
         },
     },
 
+    md5 : { 
+        match : /^[\da-f]{32}$/,
+        check : function( md5 ){
+            return md5 && md5.match( this.match );
+        },
+    },
+
     object : { 
         check : function(){ return 1 }
     },
