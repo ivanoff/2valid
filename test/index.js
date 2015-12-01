@@ -35,8 +35,8 @@ describe('Validate-me tests', function () {
                 name  : { last: "Bagdanov", },
                 metadata: { tt1:1, tt2:2 },
                 createdAt : new Date(),
-            }).should.eql({ '': 'Field "createdAt" not found in registered model',
-                ',name': 'Field "first" is requied, but not found' });
+            }).should.eql({ "": "Field 'createdAt' not found in registered model",
+                ",name": "Field 'first' is requied, but not found" });
         });    
 
 
@@ -56,7 +56,7 @@ describe('Validate-me tests', function () {
 
             this.vm.validate( "user_match", 
                 { name  : "ILIKEcAPS" }
-            ).should.eql({ '': 'Field "name" not matched with type "string"' });
+            ).should.eql({ "": "Field 'name' not matched with type 'string'" });
         });
 
     });
@@ -99,7 +99,7 @@ describe('Validate-me tests', function () {
 
             this.vm.validate( "user_pass", 
                 { pass : "r2D2" }
-            ).should.eql({ "": "Field \"pass\" not matched with type \"password\"" });
+            ).should.eql({ "": "Field 'pass' not matched with type 'password'" });
         });
 
     });
@@ -118,7 +118,7 @@ describe('Validate-me tests', function () {
 
             this.vm.validate( "user_pass_md5", 
                 { pass : "r2D2" }
-            ).should.eql({ "": "Field \"pass\" not matched with type \"md5\"" });
+            ).should.eql({ "": "Field 'pass' not matched with type 'md5'" });
         });
 
     });

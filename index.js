@@ -19,20 +19,20 @@ function deepLook ( obj, types ){
             obj[key] = deepLook( obj[key], types );
         } else {
             if ( ! types[ obj[key].type ] ) {
-                throw new Error('No type "'+ obj[key].type +'" in Types: key "'+ key +'"');
+                throw new Error("No type '"+ obj[key].type +"' in Types: key '"+ key +"'");
             }
             // check for range in new object
             if ( typeof obj[key].min !== 'undefined' 
                     && typeof types[ obj[key].type ].min !== 'undefined' 
                     && types[ obj[key].type ].min > obj[key].min ) {
-                throw new Error('In model "'+ modelName +'", key "'+ key +'" minimal value ( '+ obj[key].min +' ) is less than acceptable minimal in Types'
-                                + ' ( ' + types[ obj[key].type ].min + ' )' );
+                throw new Error("In model '"+ modelName +"', key '"+ key +"' minimal value ( "+ obj[key].min +" ) is less than acceptable minimal in Types"
+                                + " ( " + types[ obj[key].type ].min + " )" );
             }
             if ( typeof obj[key].max !== 'undefined' 
                     && typeof types[ obj[key].type ].max !== 'undefined' 
                     && types[ obj[key].type ].max < obj[key].max ) {
-                throw new Error('In model "'+ modelName +'", key "'+ key +'" maximal value ( '+ obj[key].max +' ) is in excess of maximal acceptable value in Types'
-                                + ' ( ' + types[ obj[key].type ].min + ' )' );
+                throw new Error("In model '"+ modelName +"', key '"+ key +"' maximal value ( "+ obj[key].max +" ) is in excess of maximal acceptable value in Types"
+                                + " ( " + types[ obj[key].type ].min + " )" );
             }
         }
         // get properties and methods from Types
@@ -49,10 +49,10 @@ function deepLook ( obj, types ){
 // Parameters: modelName - name of the model, modelObject - model object
 exports.registerModel = function ( modelName, modelObject ) {
     // check for name, object and if model already exists
-    if ( ! modelName )   return( 'Name is not defined' );
-    if ( ! modelObject ) return( 'Model in "'+ modelName +'" is not defined' );
+    if ( ! modelName )   return( "Name is not defined" );
+    if ( ! modelObject ) return( "Model in '"+ modelName +"' is not defined" );
     if ( this.registeredModels[ modelName ] )
-                         return( 'Model "'+ modelName +'" is already registered' );
+                         return( "Model '"+ modelName +"' is already registered" );
     var o = Object.create( modelObject );
     this.registeredModels[ modelName ] = deepLook( o, this.types );
     return false;
@@ -63,14 +63,14 @@ exports.registerModel = function ( modelName, modelObject ) {
 exports.showModels = function( params ) {
     if ( typeof( params ) === 'undefined' ) params = { displayEverything: false };
     if ( ! this.registeredModels ) {
-        console.log( 'There is no registered models' );
+        console.log( "There is no registered models" );
     } else {
-        console.log( 'List of registered models' );
+        console.log( "List of registered models" );
         for( var modelName in this.registeredModels ){
-            console.log( '  - ' + modelName );
+            console.log( "  - " + modelName );
             if( params.displayEverything ) {
                 for( var key in this.registeredModels[ modelName ] ){
-                    console.log( '      ' + key + ' : ' + this.registeredModels[ modelName ][ key ].type );
+                    console.log( "      " + key + " : " + this.registeredModels[ modelName ][ key ].type );
                 }
             }
         }
@@ -94,7 +94,7 @@ function validateObjectRequired ( modelObject, entity, parents, errors ) {
                     errors )
         } 
         else if( modelObject[ key ].required && ( !entity || !entity[ key ] ) ) {
-            errors[parents] = 'Field "'+ key +'" is requied, but not found';
+            errors[parents] = "Field '"+ key +"' is requied, but not found";
         }
     }
     return errors;
@@ -104,13 +104,13 @@ function validateObjectEntity ( modelObject, entity, parents, errors ) {
     if( !errors ) errors = {};
     for( var key in entity ){
         if ( !modelObject[ key ] ) {
-            errors[parents] = 'Field "'+ key +'" not found in registered model';
+            errors[parents] = "Field '"+ key +"' not found in registered model";
         }
         else if ( !modelObject[ key ].type ) {
             validateObjectEntity ( modelObject[ key ], entity[ key ], parents? [ parents, key ] : key, errors )
         } 
         else if( !modelObject[ key ].check( entity[ key ] ) ) {
-            errors[parents] = 'Field "'+ key +'" not matched with type "'+ modelObject[ key ].type +'"';
+            errors[parents] = "Field '"+ key +"' not matched with type '"+ modelObject[ key ].type +"'";
         }
     }
     return errors;
