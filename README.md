@@ -39,8 +39,8 @@ Result
 If validate passed, then empty object returned.
 - Example: {}
 
-If validate not passed, then validate result contains text field with error description.
-Also, there can be notFound and notMatched keys to find what keys was not found or not matched.
+If validate not passed, then validate result contains ```text``` field with error description.
+Also, there can be ```notFound``` and ```notMatched``` keys to find what keys was not found or not matched.
 - Example: { notFound: [ '.name.first' ], text: 'Field .name.first not found in registered model' }
 - Example: { notMatched: { '.id': 'uuid' }, text: 'Field .id not matched with type uuid' }
 
@@ -156,7 +156,7 @@ password : {
 
 
 ## Module description
-### Methods and properties of myLibrary
+### Methods and properties of 2valid
 - registerModel( modelName, modelObject ) - register model modelName with modelObject to check
 - validate( modelName, entity ) - validate model modelName with entity. Return empty object if validate is ok.
 - registeredModels - list of registered models
