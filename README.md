@@ -3,7 +3,7 @@
 
 JavaScript simple data validator
 
-v2.0.1
+v2.0.2
 
 
 ## Installation
@@ -24,9 +24,14 @@ v.registerModel('user', {
 // object to validate
 var userObject = {id: 123, name: 'Alex Validates'}
 
-// check if object is valid.
+// check if object is valid sync
 var valid = v.validate('user', userObject);
 console.log(valid.text || 'object is valid');
+
+// check if object is valid with callback
+v.validate('user', userObject, function(err) {
+  console.log(err || 'object is valid');
+});
 ```
 
 Result
@@ -158,7 +163,7 @@ password : {
 ## Module description
 ### Methods and properties of 2valid
 - registerModel( modelName, modelObject ) - register model modelName with modelObject to check
-- validate( modelName, entity ) - validate model modelName with entity. Return empty object if validate is ok.
+- validate( modelName, entity [, callback] ) - validate model modelName with entity. Return empty object if validate is ok. As callback, return error as first argument.
 - registeredModels - list of registered models
 - showModelsFull() - show full information of registered model
 - dispose() - remove all registered modelNames

@@ -131,15 +131,19 @@ function validateObjectEntity ( modelObject, entity, parents, errors ) {
 }
 
 // Check if entity pass modelName's validation
-exports.validate = function( modelName, entity ) {
+exports.validate = function( modelName, entity, next ) {
     var modelObject = this.registeredModels[ modelName ];
     var errors = validateObjectRequired (
                     modelObject, entity, [],
                     validateObjectEntity ( modelObject, entity, [] ) 
                  );
-    if( !Object.keys(errors).length ) errors = {};
-    if(errors.text) errors.text = errors.text.join('. ');
-    return errors;
+    if(errors && errors.text) errors.text = errors.text.join('. ');
+
+    if (typeof next === "function") {
+        next(Object.keys(errors).length? errors : null);
+    } else {
+        return Object.keys(errors).length? errors : {};
+    }
 }
 
 // 'Forget' about all registered models
