@@ -1,32 +1,154 @@
-validate-me
+2valid
 =========
 
-JavaScript data structure validator
+JavaScript simple data validator
+
+v2.0.1
 
 
 ## Installation
-npm install validate-me --save
+```npm install --save 2valid```
 
 
 ## Usage
 
 ```javascript
-vm = require( 'validate-me' );
+var v = require('2valid');
 
-vm.registerModel( "user", {
-  id:   { type: "uuid", required: true },        // property “id” required and must be uuid
-  name: { type: "string", min: 4, max: 128 },    // property “name” must be String and contain 4-128
-} );
+// register model 'user' to check integer 'id' and string 'name'
+v.registerModel('user', {
+  id: {type: 'integer'},
+  name: {type: 'string'}
+});
 
-vm.showModelsExpanded();
+// object to validate
+var userObject = {id: 123, name: 'Alex Validates'}
 
-var valid = vm.validate( "user", {
-      id    : "61cecfb4-da43-4b65-aaa0-f1c3be81ec53",
-      name  : "Alex Bardanov",
-    }) 
-
-vm.consoleTrueOrError ( valid );
+// check if object is valid.
+var valid = v.validate('user', userObject);
+console.log(valid.text || 'object is valid');
 ```
+
+Result
+
+```object is valid```
+
+
+## Validate result
+
+If validate passed, then empty object returned.
+- Example: {}
+
+If validate not passed, then validate result contains text field with error description.
+Also, there can be notFound and notMatched keys to find what keys was not found or not matched.
+- Example: { notFound: [ '.name.first' ], text: 'Field .name.first not found in registered model' }
+- Example: { notMatched: { '.id': 'uuid' }, text: 'Field .id not matched with type uuid' }
+
+
+## Nested object validator
+
+```javascript
+var v = require('2valid');
+
+// property 'name' of 'user' model must have 'first' (required) and 'last' keys.
+v.registerModel('user', {
+    name: {
+        first : { type: 'string', required: true },
+        last  : { type: 'string' },
+    }
+});
+
+// {}
+console.log(v.validate('user', {name: {first: 'Alex', last: 'Validator'}}));
+console.log(v.validate('user', {name: {first: 'Marry'}}));
+
+// { notFound: [ '.id', '.name.first' ],
+//   text: 'Field .id not found in registered model. Field .name.first not found in registered model' }
+console.log(v.validate('user', {id: 123}));
+
+// { notFound: [ '.name.first' ], text: 'Field .name.first not found in registered model' }
+console.log(v.validate('user', {name: {last: 'Alex'}}));
+```
+
+
+## Regex validator
+
+```javascript
+var v = require('2valid');
+
+// property 'name' of 'cmyk' model must be 'cyan', 'magenta', 'yellow' or 'key' value
+v.registerModel('cmyk', {name: { type: 'string', match : /^cyan|magenta|yellow|key$/i }});
+
+// {}
+console.log(v.validate('cmyk', {name: 'Magenta'}));
+
+// { notMatched: { '.name': 'string' }, text: 'Field .name not matched with type string' }
+console.log(v.validate('cmyk', {name: 'black'}));
+console.log(v.validate('cmyk', {name: 123}));
+```
+
+
+## Required keys validator
+
+```javascript
+var v = require('2valid');
+
+// property “id” required and must be uuid
+v.registerModel('user', {id: { type: 'uuid', required: true }});
+
+// {}
+console.log(v.validate('user', {id: '61cecfb4-da43-4b65-aaa0-f1c3be81ec53'}));
+
+// { notMatched: { '.id': 'uuid' }, text: 'Field .id not matched with type uuid' }
+console.log(v.validate('user', {id: 123}));
+
+// { notFound: [ '.name', '.id' ],
+//   text: 'Field .name not found in registered model. Field .id not found in registered model' }
+console.log(v.validate('user', {name: 'Alex'}));
+```
+
+
+## Length checking validator
+
+```javascript
+var v = require('2valid');
+
+// property “name” must be exacly 2 chars length
+v.registerModel('ISO 3166-2', {name: { type: 'string', min: 2, max: 2 }});
+
+// {}
+console.log(v.validate('ISO 3166-2', {name: 'US'}));
+
+// { notMatched: { '.name': 'string' }, text: 'Field .name not matched with type string' }
+console.log(v.validate('ISO 3166-2', {name: 123}));
+console.log(v.validate('ISO 3166-2', {name: 'USA'}));
+console.log(v.validate('ISO 3166-2', {name: 'U'}));
+```
+
+
+## Add type
+You can add new type to validate in to types.js.
+*'check' method is required to check new inserted type.*
+
+For example, new type 'password'. It type must contains minimum 4 chars: at least one lower and one upper case, digit and special chars.
+Add code below to types.js in list property:
+```javascript
+password : {
+    min   : 4,         // string.min Minimum length of the string
+    max   : Infinity,  // string.max Maximum length of the string
+    check : function( password ){   // check password type and size
+        if ( ( typeof string === 'string' || string instanceof String )
+                && string.length >= this.min
+                && string.length <= this.max
+                && string.match(/((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).+)/)
+        )
+            return true
+        else
+            return false;
+    }
+}
+```
+
 
 ## Tests
 
@@ -35,116 +157,63 @@ vm.consoleTrueOrError ( valid );
 
 ## Module description
 ### Methods and properties of myLibrary
--  registerModel( modelName, modelObject ) - register model modelName with modelObject
--  registeredModels - list of registered models
--  validate( modelName, entity ) - validate model modelName with entity
--  showModels( full ) - show information of registered models
--  showModelsFull() - show full information of registered model
--  dispose() - remove all registered modelNames
--  errors - list of errors
-"Types" properties located in types.js and included description to validate of each type 
-( "min" and "max" properties, add "check" method to check validation ).
+- registerModel( modelName, modelObject ) - register model modelName with modelObject to check
+- validate( modelName, entity ) - validate model modelName with entity. Return empty object if validate is ok.
+- registeredModels - list of registered models
+- showModelsFull() - show full information of registered model
+- dispose() - remove all registered modelNames
 
-
-## Add type
-If you need add new type, you can do it in Types variable in types.js. Be shure to add "check" method 
-to check new inserted type. Also you can add "min" and "max" properties to check length.
-
-For example, new type "password". It type must contains minimum 4 chars: at least one lower 
-and one upper case, digit and special chars.
-Add code below to types.js in list property:
-```javascript
-password : {
-    min   : 4,         // string.min Minimum length of the string
-    max   : Infinity,  // string.max Maximum length of the string
-    check : function( password ){   // check password type and size
-        if ( ( typeof string === 'string' || string instanceof String )
-                && string.length >= this.min 
-                && string.length <= this.max 
-                && string.match(/((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).+)/) 
-        ) 
-            return true
-        else 
-            return false;
-    },
-},
-```
 
 ## Register model
 For register model you need to use registerModel method.
 
 ```javascript
-myLibrary.registerModel( "user_password", {
-  id:   { type: "uuid", required: true },     // property “id” must be uuid
-    // property “name” must be String and contain 4-128
-  name: { type: "string", min: 4, max: 128, required: true }, 
-    // property “password” must be String and contain 4-128 chars: 
-    // at least one lower and one upper case, digit and special chars.
-  password: { type: "password", max: 128, required: true },       
-} );
+v.registerModel( 'user', {
+  id:   { type: 'uuid', required: true }, // property “id” must be uuid
+  name: { type: 'string', min: 4, max: 128, required: true }, // property “name” must be String and contain 4-128
+  password: { type: 'password', max: 128, required: true }, // property “password” must be String and contain 4-128 chars:
+});
 ```
 
 
-## Validate object  
-If you want validate new object, then insert before "myLibrary.dispose();" line:
-```javascript
-myLibrary.consoleTrueOrError ( myLibrary.validate( "user", "entity" ) );
+## Validate object
 
-For example, validate based on "user" model:
-myLibrary.consoleTrueOrError ( 
-    myLibrary.validate( "user", { id : "61cecfb4-da33-4b15-aa10-f1c6be81ec53", name : "Dimitry Ivanov", password : "A1z!" }) 
-);
+```javascript
+v.validate( 'user', { id : '61cecfb4-da33-4b15-aa10-f1c6be81ec53', name : 'Validator', password : 'A1z!' })
 ```
 
 
 ## Exceptions
+
 - Name is undefined
 ```javascript
-myLibrary.registerModel( "Name", { id: { type: "uuid", required: true } } );
+myLibrary.registerModel( 'Name', { id: { type: 'uuid', required: true } } );
 ```
 
-- Model in "modelName" is undefined
+- Model in 'modelName' is undefined
 ```javascript
-myLibrary.registerModel( "modelName", NaN );
+myLibrary.registerModel( 'modelName', NaN );
 ```
 
-- Model "modelName" is already registered
+- Model 'modelName' is already registered
 ```javascript
-myLibrary.registerModel( "modelName", { id: { type: "uuid", min: 1, max: 5, required: true } } );
-myLibrary.registerModel( "modelName", { id: { type: "name" } } );
+myLibrary.registerModel( 'modelName', { id: { type: 'uuid', min: 1, max: 5, required: true } } );
+myLibrary.registerModel( 'modelName', { id: { type: 'name' } } );
 ```
 
-- No field "name" in key "name" in model "modelName"
+- No field 'name' in key 'name' in model 'modelName'
 ```javascript
-myLibrary.consoleTrueOrError ( myLibrary.validate( "modelName", { name  : "Alex Bardanov" }) );
+myLibrary.consoleTrueOrError ( myLibrary.validate( 'modelName', { name  : 'Alex Validates' }) );
 ```
 
 - No type field exception
 ```javascript
-myLibrary.registerModel( "name_exception", { date: { parameter: "date" } } );
+myLibrary.registerModel( 'name_exception', { date: { parameter: 'date' } } );
 ```
 
 - No guid type exception
 ```javascript
-myLibrary.registerModel( "name_exception", { id: { type: "guid" } } );
-```
-
-
-## Errors
-- Required field "key" not found in model "modelName"
-- Field "key" not found in model "modelName"
-- Field "key" not matched with type "type" in model "modelName"
-- 2 errors: Field not matched with type exception and Field not found
-```javascript
-myLibrary.consoleTrueOrError ( myLibrary.validate( "user", { id : "1cecfb4-da43-4b65-aaa0-f1c3be81ec53", imya : "Alex Bardanov" }) );
-```
-- Size minimum check error
-```javascript
-myLibrary.consoleTrueOrError ( myLibrary.validate( "user", { id : "61cecfb4-da43-4b65-aaa0-f1c3be81ec53", name : "" }) );
-```
-- Size maximum check error
-```javascript
-myLibrary.consoleTrueOrError ( myLibrary.validate( "user", { id : "61cecfb4-da43-4b65-aaa0-f1c3be81ec53", name : "ASNKJW oew  owek rewRWIWJG OERGMLkf gsojejrwoeg ke r gerEGIOJWgij i4 ggr" }) );
+myLibrary.registerModel( 'name_exception', { id: { type: 'guid' } } );
 ```
 
 
@@ -156,12 +225,9 @@ myLibrary.consoleTrueOrError ( myLibrary.validate( "user", { id : "61cecfb4-da43
 * 0.2.4 Add match ability to string
 * 0.2.10 Split number to integer and float, add password type
 * 0.2.12 Validate md5 hash
-* 0.3.2 Change quotes in messages 
-
-
-## To-Do
-* Return wishes to validate ( ex. "Password must contain 4 digits and 4 most popular actor's names" )
-* Try to find a hint to validate ( ex. "do you watn to find size, not a 'XXze'?" )
+* 0.3.2 Change quotes in messages
+* 0.4.1 Replace result with notFound, notMatched and text keys
+* 2.0.1 Rename project to 2valid
 
 
 ## Created by

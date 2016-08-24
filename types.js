@@ -2,20 +2,13 @@
 
 module.exports = {
 
-    uuid : { // uuid methods. uuid.check returns true if parameter looks like UUID, false otherwise 
-        match : /^[\da-z]{8}-[\da-z]{4}-4[\da-z]{3}-[\da-z]{4}-[\da-z]{12}$/,
-        check : function( uuid ){
-            return uuid && uuid.match( this.match );
-        },
-    },
-
     string : { // string properties and methods
         min   : 0,        // string.min Minimum length of the string
         max   : Infinity, // string.max Maximum length of the string
         check : function( string ){ // string.check check sting type and size
-            
+
             return (( typeof string === 'string' || string instanceof String )
-                    && string.length >= this.min 
+                    && string.length >= this.min
                     && string.length <= this.max
                     && ( !this.match || string.match( this.match ) )
                    );
@@ -26,10 +19,10 @@ module.exports = {
         min   : -Infinity,   // number.min Minimum number value
         max   : Infinity,    // number.max Maximum number value
         check : function( number ){ // number.check check number type and size
-            return typeof number === 'number' 
-                    && number >= this.min 
+            return typeof number === 'number'
+                    && number >= this.min
                     && number <= this.max
-                    && !((""+number).match(/\./));
+                    && !`${number}`.match(/\./);
         },
     },
 
@@ -37,7 +30,7 @@ module.exports = {
         min   : -Infinity,   // number.min Minimum number value
         max   : Infinity,    // number.max Maximum number value
         check : function( number ){ // number.check check number type and size
-            return typeof number === 'number' 
+            return typeof number === 'number'
                     && number >= this.min 
                     && number <= this.max;
         },
@@ -52,7 +45,7 @@ module.exports = {
     email : { // date methods
         match : /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]+/i,
         check : function( email ){  // date.check Maximum length of the string
-            return email.match( this.match );
+            return `${email}`.match( this.match );
         },
     },
 
@@ -63,23 +56,28 @@ module.exports = {
         match : /^.*(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).*$/,
         check : function( password ) {   // check password type and size
             return typeof password === 'string'
-                    && password.length >= this.min 
-                    && password.length <= this.max 
-                    && password.match( this.match ) 
+                    && password.length >= this.min
+                    && password.length <= this.max
+                    && password.match( this.match )
         },
     },
 
-    md5 : { 
+    md5 : {
         match : /^[\da-f]{32}$/,
         check : function( md5 ){
-            return md5 && md5.match( this.match );
+            return md5 && `${md5}`.match( this.match );
         },
     },
 
-    object : { 
+    uuid : { // uuid methods. uuid.check returns true if parameter looks like UUID, false otherwise 
+        match : /^[\da-z]{8}-[\da-z]{4}-4[\da-z]{3}-[\da-z]{4}-[\da-z]{12}$/,
+        check : function( uuid ){
+            return uuid && `${uuid}`.match( this.match );
+        },
+    },
+
+    object : {
         check : function(){ return 1 }
     },
 
 }
-
-
