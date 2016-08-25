@@ -1,6 +1,14 @@
 # Config changelog
 
-## [2.1.1](http://github.com/ivanoff/2valid/tree/2.0.2) (2016-08-25)
+## [2.1.2](http://github.com/ivanoff/2valid/tree/2.1.2) (2016-08-25)
+[Full Changelog](http://github.com/ivanoff/2valid/compare/2.1.1...2.1.2)
+
+**What Was Done:**
+
+- add password validation example
+
+
+## [2.1.1](http://github.com/ivanoff/2valid/tree/2.1.1) (2016-08-25)
 [Full Changelog](http://github.com/ivanoff/2valid/compare/2.0.2...2.1.1)
 
 **What Was Done:**

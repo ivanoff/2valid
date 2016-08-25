@@ -2,21 +2,31 @@
 
 ### JavaScript simple data validator
 
- v2.1.1
+ v2.1.2
 
 
 ## Installation
 ```npm install --save 2valid```
 
 
-## Simple Usage
+## Usage ( simple example )
 
-Check if integer
+Check for integer
 
 ```javascript
 var v = require('2valid');
-console.log( v.validate('integer', 111) ); //null
-console.log( v.validate('integer', 'aaa')) ); // { notMatched: 'integer' }
+console.log( v.validate('integer', 111) ); //null 
+console.log( v.validate('integer', 'aaa') ); // { notMatched: 'integer' } 
+```
+
+## Usage ( password validator )
+
+Check for password. Minimum 4 chars, at least one caps and one small letter, digit and special
+
+```javascript
+var v = require('2valid');
+console.log( v.validate('password', 'As1eRR') ); // { notMatched: 'password' } 
+console.log( v.validate('password', '!A1e') ); // null
 ```
 
 ## Available types
