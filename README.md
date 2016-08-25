@@ -1,8 +1,8 @@
 # 2valid
 
-*JavaScript simple data validator*
+## JavaScript simple data validator
 
-v2.1.1
+### v2.1.1
 
 
 # Installation
