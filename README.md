@@ -11,6 +11,8 @@
 
 # Simple Usage
 
+Check if integer:
+
 ```javascript
 var v = require('2valid');
 console.log( v.validate('integer', 111) ); //null
