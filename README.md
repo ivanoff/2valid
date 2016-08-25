@@ -1,7 +1,6 @@
 # 2valid
-=========
 
-JavaScript simple data validator
+*JavaScript simple data validator*
 
 v2.1.1
 
@@ -20,9 +19,8 @@ console.log( v.validate('integer', 'aaa')) ); // { notMatched: 'integer' }
 
 # Available types
 
--------------
 | type | description |
--------------
+|------|-------------|
 | string | string |
 | integer | integer number |
 | float | float number |
@@ -31,19 +29,18 @@ console.log( v.validate('integer', 'aaa')) ); // { notMatched: 'integer' }
 | password | password, minimum 4 chars, at least one caps and one small letter, digit and special |
 | md5 | MD5 string |
 | uuid | UUID string |
-------------
 
 
 # Results
 
-If validate passed, then results is null.
+If validate passed, then results is ```null```.
 
 Otherwise validate result is object with these keys:
 
-- ```notMatched``` [object] which key does not match which type
-- ```notRequired``` [array of string] list of keys are not in model
-- ```notFound``` [array of string] which keys in model are not found in checked object
-- ```text``` [string] simple description of all errors
+- ```notMatched``` [object] - which key does not match which type
+- ```notRequired``` [array of string] - list of keys are not in model
+- ```notFound``` [array of string] - which keys in model are not found in checked object
+- ```text``` [string] - simple description of all errors
 
 
 # Usage
@@ -61,6 +58,24 @@ v.validate( 'integer', 111, function(err) {
 v.validate( 'integer', '61cecfb4-da43-4b65-aaa0-f1c3be81ec53', function(err) {
   console.log(err); // { notMatched: 'integer' }
 });
+```
+
+## With simple model
+
+```javascript
+var vm = require('./index');
+
+var userModel = {
+  id: {type: 'integer'},
+  name: {type: 'string', required: true}
+};
+
+vm.validate( userModel,
+  { id: 123, secondName: 'Max Validator' },
+  function(err) {
+    console.log(err); // null
+  }
+);
 ```
 
 ## Full error stack
