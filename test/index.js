@@ -11,6 +11,53 @@ describe('2valid tests', function () {
         this.vm = null
     })
 
+    describe('Simple validate', function () {
+
+        it('validate passed', function(done) {
+            this.vm.validate( 'integer', 123, function(err) {
+                should.not.exist(err);
+                done();
+            });
+        });
+
+        it('validate failed', function(done) {
+            this.vm.validate( 'integer', 'aaa', function(err) {
+                err.should.eql({ notMatched: 'integer' });
+                done();
+            });
+        });
+
+    });
+
+    describe('Simple model to validate', function () {
+
+        var userModel = {
+            id: {type: 'integer'},
+            name: {type: 'string', required: true}
+        };
+
+        it('validate passed', function(done) {
+            this.vm.validate( userModel,
+                { id: 111, name: 'Max Validator' },
+                function(err) {
+                    should.not.exist(err);
+                    done();
+            });
+        });
+
+        it('validate failed', function(done) {
+            this.vm.validate( userModel,
+                { id: 'Max', secondName: 'Validator' },
+                function(err) {
+                    err.should.eql({ notMatched: { '.id': 'integer' },
+                        text: 'Field .id not matched with type integer. Field .secondName not required. Field .name not found',
+                        notRequired: [ '.secondName' ], notFound: [ '.name' ] });
+                    done();
+            });
+        });
+
+    });
+
     describe('Model to validate nested and required data', function () {
 
         it('register new model', function(done) {
@@ -44,8 +91,8 @@ describe('2valid tests', function () {
                 metadata: { tt1:1, tt2:2 },
                 createdAt : new Date(),
             }, function(err) {
-                err.should.eql({ notFound: [ '.createdAt', '.name.first' ],
-                    text: 'Field .createdAt not found in registered model. Field .name.first not found in registered model' });
+                err.should.eql({ notFound: [ '.name.first' ], notRequired: [ '.createdAt' ],
+                    text: 'Field .createdAt not required. Field .name.first not found' });
                 done();
             });
         });

@@ -100,7 +100,7 @@ function validateObjectRequired ( modelObject, entity, parents, errors ) {
             errors.notFound.push(`${parents}.${key}`);
 
             if(!errors.text) errors.text = [];
-            errors.text.push(`Field ${parents}.${key} not found in registered model`);
+            errors.text.push(`Field ${parents}.${key} not found`);
         }
     }
     return errors;
@@ -110,11 +110,11 @@ function validateObjectEntity ( modelObject, entity, parents, errors ) {
     if( !errors ) errors = {};
     for( var key in entity ){
         if ( !modelObject[ key ] ) {
-            if(!errors.notFound) errors.notFound = [];
-            errors.notFound.push(`${parents}.${key}`);
+            if(!errors.notRequired) errors.notRequired = [];
+            errors.notRequired.push(`${parents}.${key}`);
 
             if(!errors.text) errors.text = [];
-            errors.text.push(`Field ${parents}.${key} not found in registered model`);
+            errors.text.push(`Field ${parents}.${key} not required`);
         }
         else if ( !modelObject[ key ].type ) {
             validateObjectEntity ( modelObject[ key ], entity[ key ], parents? [ parents, key ] : key, errors )
@@ -132,7 +132,15 @@ function validateObjectEntity ( modelObject, entity, parents, errors ) {
 
 // Check if entity pass modelName's validation
 exports.validate = function( modelName, entity, next ) {
-    var modelObject = this.registeredModels[ modelName ];
+    var modelObject = this.registeredModels[modelName];
+
+    if(typeof(modelName) === 'object') {
+      modelObject = deepLook( modelName, this.types )
+    } else if(this.types[modelName]) {
+      var result = this.types[modelName].check(entity)? null : {notMatched:modelName};
+      return typeof next === "function"? next(result) : result;
+    }
+
     var errors = validateObjectRequired (
                     modelObject, entity, [],
                     validateObjectEntity ( modelObject, entity, [] ) 

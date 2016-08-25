@@ -1,16 +1,96 @@
-2valid
+# 2valid
 =========
 
 JavaScript simple data validator
 
-v2.0.2
+v2.1.1
 
 
-## Installation
+# Installation
 ```npm install --save 2valid```
 
 
-## Usage
+# Simple Usage
+
+```javascript
+var v = require('2valid');
+console.log( v.validate('integer', 111) ); //null
+console.log( v.validate('integer', 'aaa')) ); // { notMatched: 'integer' }
+```
+
+# Available types
+
+-------------
+| type | description |
+-------------
+| string | string |
+| integer | integer number |
+| float | float number |
+| date | date methods |
+| email | simple e-mail |
+| password | password, minimum 4 chars, at least one caps and one small letter, digit and special |
+| md5 | MD5 string |
+| uuid | UUID string |
+------------
+
+
+# Results
+
+If validate passed, then results is null.
+
+Otherwise validate result is object with these keys:
+
+- ```notMatched``` [object] which key does not match which type
+- ```notRequired``` [array of string] list of keys are not in model
+- ```notFound``` [array of string] which keys in model are not found in checked object
+- ```text``` [string] simple description of all errors
+
+
+# Usage
+
+
+## Simple async mode
+
+```javascript
+var v = require('2valid');
+
+v.validate( 'integer', 111, function(err) {
+  console.log(err); //null
+});
+
+v.validate( 'integer', '61cecfb4-da43-4b65-aaa0-f1c3be81ec53', function(err) {
+  console.log(err); // { notMatched: 'integer' }
+});
+```
+
+## Full error stack
+
+```javascript
+var vm = require('./index');
+
+var userModel = {
+  id: {type: 'integer'},
+  name: {type: 'string', required: true}
+};
+
+vm.validate( userModel,
+  { id: 'Max', secondName: 'Validator' },
+  function(err) {
+    console.log(err);
+  }
+);
+```
+
+Result
+```
+{ notMatched: { '.id': 'integer' },
+  text: 'Field .id not matched with type integer. Field .secondName not required. Field .name not found',
+  notRequired: [ '.secondName' ],
+  notFound: [ '.name' ] }
+```
+
+
+## With register model
 
 ```javascript
 var v = require('2valid');
@@ -131,7 +211,7 @@ console.log(v.validate('ISO 3166-2', {name: 'U'}));
 ```
 
 
-## Add type
+# Add type
 You can add new type to validate in to types.js.
 *'check' method is required to check new inserted type.*
 
@@ -155,13 +235,13 @@ password : {
 ```
 
 
-## Tests
+# Tests
 
   npm test
 
 
-## Module description
-### Methods and properties of 2valid
+# Module description
+## Methods and properties of 2valid
 - registerModel( modelName, modelObject ) - register model modelName with modelObject to check
 - validate( modelName, entity [, callback] ) - validate model modelName with entity. Return empty object if validate is ok. As callback, return error as first argument.
 - registeredModels - list of registered models
@@ -169,7 +249,7 @@ password : {
 - dispose() - remove all registered modelNames
 
 
-## Register model
+# Register model
 For register model you need to use registerModel method.
 
 ```javascript
@@ -181,14 +261,14 @@ v.registerModel( 'user', {
 ```
 
 
-## Validate object
+# Validate object
 
 ```javascript
 v.validate( 'user', { id : '61cecfb4-da33-4b15-aa10-f1c6be81ec53', name : 'Validator', password : 'A1z!' })
 ```
 
 
-## Exceptions
+# Exceptions
 
 - Name is undefined
 ```javascript
@@ -222,7 +302,7 @@ myLibrary.registerModel( 'name_exception', { id: { type: 'guid' } } );
 ```
 
 
-## Release History
+# Release History
 
 * 0.1.0 Initial release
 * 0.2.0 Fix nested required object error
@@ -235,9 +315,9 @@ myLibrary.registerModel( 'name_exception', { id: { type: 'guid' } } );
 * 2.0.1 Rename project to 2valid
 
 
-## Created by
+# Created by
 
 Dimitry, 2@ivanoff.org.ua
 
-curl -A cv ivanoff.org.ua
+```curl -A cv ivanoff.org.ua```
 
