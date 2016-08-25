@@ -73,7 +73,7 @@ v.validate( 'integer', '61cecfb4-da43-4b65-aaa0-f1c3be81ec53', function(err) {
 });
 ```
 
-## With simple model
+### With simple model
 
 Check if valid to simple object with integer ```id``` and string ```name```
 
@@ -93,9 +93,9 @@ vm.validate( userModel,
 );
 ```
 
-## Full error stack
+### Full error stack
 
-Validation failed with all types of error
+Validation failed with all types of errors
 
 ```javascript
 var vm = require('./index');
@@ -122,7 +122,9 @@ Result
 ```
 
 
-## With register model
+### With register model
+
+Rregister ```user``` model to check validation by model name
 
 ```javascript
 var v = require('2valid');
@@ -151,18 +153,9 @@ Result
 ```object is valid```
 
 
-## Validate result
+### Nested object validator
 
-If validate passed, then empty object returned.
-- Example: {}
-
-If validate not passed, then validate result contains ```text``` field with error description.
-Also, there can be ```notFound``` and ```notMatched``` keys to find what keys was not found or not matched.
-- Example: { notFound: [ '.name.first' ], text: 'Field .name.first not found in registered model' }
-- Example: { notMatched: { '.id': 'uuid' }, text: 'Field .id not matched with type uuid' }
-
-
-## Nested object validator
+Validate ```name.first``` and ```name.second```
 
 ```javascript
 var v = require('2valid');
@@ -188,7 +181,9 @@ console.log(v.validate('user', {name: {last: 'Alex'}}));
 ```
 
 
-## Regex validator
+### Regex validator
+
+Only 'cyan', 'magenta', 'yellow' or 'key' can passed in ```cmyk``` model to validate
 
 ```javascript
 var v = require('2valid');
@@ -205,7 +200,9 @@ console.log(v.validate('cmyk', {name: 123}));
 ```
 
 
-## Required keys validator
+### Required keys validator
+
+Check if field is required
 
 ```javascript
 var v = require('2valid');
@@ -225,7 +222,9 @@ console.log(v.validate('user', {name: 'Alex'}));
 ```
 
 
-## Length checking validator
+### Length checking validator
+
+Checking for fixed length of the string
 
 ```javascript
 var v = require('2valid');
@@ -243,7 +242,7 @@ console.log(v.validate('ISO 3166-2', {name: 'U'}));
 ```
 
 
-# Add type
+## Add type
 You can add new type to validate in to types.js.
 *'check' method is required to check new inserted type.*
 
@@ -267,13 +266,13 @@ password : {
 ```
 
 
-# Tests
+## Tests
 
   npm test
 
 
-# Module description
-## Methods and properties of 2valid
+## Module description
+### Methods and properties of 2valid
 - registerModel( modelName, modelObject ) - register model modelName with modelObject to check
 - validate( modelName, entity [, callback] ) - validate model modelName with entity. Return empty object if validate is ok. As callback, return error as first argument.
 - registeredModels - list of registered models
@@ -281,7 +280,7 @@ password : {
 - dispose() - remove all registered modelNames
 
 
-# Register model
+## Register model
 For register model you need to use registerModel method.
 
 ```javascript
@@ -293,14 +292,14 @@ v.registerModel( 'user', {
 ```
 
 
-# Validate object
+## Validate object
 
 ```javascript
 v.validate( 'user', { id : '61cecfb4-da33-4b15-aa10-f1c6be81ec53', name : 'Validator', password : 'A1z!' })
 ```
 
 
-# Exceptions
+## Exceptions
 
 - Name is undefined
 ```javascript
@@ -334,7 +333,7 @@ myLibrary.registerModel( 'name_exception', { id: { type: 'guid' } } );
 ```
 
 
-# Release History
+## Release History
 
 * 0.1.0 Initial release
 * 0.2.0 Fix nested required object error
@@ -347,7 +346,7 @@ myLibrary.registerModel( 'name_exception', { id: { type: 'guid' } } );
 * 2.0.1 Rename project to 2valid
 
 
-# Created by
+## Created by
 
 Dimitry, 2@ivanoff.org.ua
 
