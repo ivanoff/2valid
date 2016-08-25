@@ -1,17 +1,17 @@
 # 2valid
 
-## JavaScript simple data validator
+### JavaScript simple data validator
 
-### v2.1.1
+ v2.1.1
 
 
-# Installation
+## Installation
 ```npm install --save 2valid```
 
 
-# Simple Usage
+## Simple Usage
 
-Check if integer:
+Check if integer
 
 ```javascript
 var v = require('2valid');
@@ -19,7 +19,7 @@ console.log( v.validate('integer', 111) ); //null
 console.log( v.validate('integer', 'aaa')) ); // { notMatched: 'integer' }
 ```
 
-# Available types
+## Available types
 
 | type | description |
 |------|-------------|
@@ -33,9 +33,9 @@ console.log( v.validate('integer', 'aaa')) ); // { notMatched: 'integer' }
 | uuid | UUID string |
 
 
-# Results
+## Results
 
-If validate passed, then results is ```null```.
+If validate passed, then result is ```null```.
 
 Otherwise validate result is object with these keys:
 
@@ -44,11 +44,22 @@ Otherwise validate result is object with these keys:
 - ```notFound``` [array of string] - which keys in model are not found in checked object
 - ```text``` [string] - simple description of all errors
 
+For example:
 
-# Usage
+```
+{ notMatched: { '.id': 'integer' },
+  text: 'Field .id not matched with type integer. Field .secondName not required. Field .name not found',
+  notRequired: [ '.secondName' ],
+  notFound: [ '.name' ] }
+```
 
 
-## Simple async mode
+## Usage
+
+
+### Simple async mode
+
+Check if integer
 
 ```javascript
 var v = require('2valid');
@@ -63,6 +74,8 @@ v.validate( 'integer', '61cecfb4-da43-4b65-aaa0-f1c3be81ec53', function(err) {
 ```
 
 ## With simple model
+
+Check if valid to simple object with integer ```id``` and string ```name```
 
 ```javascript
 var vm = require('./index');
@@ -81,6 +94,8 @@ vm.validate( userModel,
 ```
 
 ## Full error stack
+
+Validation failed with all types of error
 
 ```javascript
 var vm = require('./index');
