@@ -19,6 +19,8 @@ module.exports = {
         min   : -Infinity,   // number.min Minimum number value
         max   : Infinity,    // number.max Maximum number value
         check : function( number ){ // number.check check number type and size
+            if(number == parseInt(number)) number = parseInt(number);
+
             return typeof number === 'number'
                     && number >= this.min
                     && number <= this.max
@@ -30,6 +32,8 @@ module.exports = {
         min   : -Infinity,   // number.min Minimum number value
         max   : Infinity,    // number.max Maximum number value
         check : function( number ){ // number.check check number type and size
+            if(number == parseFloat(number)) number = parseFloat(number);
+
             return typeof number === 'number'
                     && number >= this.min 
                     && number <= this.max;

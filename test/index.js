@@ -146,11 +146,59 @@ describe('2valid tests', function () {
             });
         });
 
+        it('validate passed string', function(done) {
+            this.vm.validate( 'user_int', {
+                id : "123"
+            }, function(err) {
+                should.not.exist(err);
+                done();
+            });
+        });
+
         it('check bad integer data', function(done) {
             this.vm.validate( 'user_int', {
                 id : 123.1
             }, function(err) {
                 err.should.eql({ notMatched: { '.id': 'integer' }, text: 'Field .id not matched with type integer' });
+                done();
+            });
+        });
+
+    });
+
+
+    describe('Model to validate float data', function() {
+
+        it('register model with float', function(done) {
+            this.vm.registerModel( 'user_float', {
+                id:   { type: 'float' },
+            }).should.be.false;
+            done();
+        });
+
+        it('validate passed', function(done) {
+            this.vm.validate( 'user_float', {
+                id : 123.321
+            }, function(err) {
+                should.not.exist(err);
+                done();
+            });
+        });
+
+        it('validate passed integer', function(done) {
+            this.vm.validate( 'user_float', {
+                id : 123
+            }, function(err) {
+                should.not.exist(err);
+                done();
+            });
+        });
+
+        it('validate passed string', function(done) {
+            this.vm.validate( 'user_float', {
+                id : "123.321"
+            }, function(err) {
+                should.not.exist(err);
                 done();
             });
         });

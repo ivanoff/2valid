@@ -1,5 +1,14 @@
 # Config changelog
 
+## [2.1.3](http://github.com/ivanoff/2valid/tree/2.1.3) (2016-09-22)
+[Full Changelog](http://github.com/ivanoff/2valid/compare/2.1.2...2.1.3)
+
+**What Was Done:**
+
+- check integer in string
+- check float in string
+
+
 ## [2.1.2](http://github.com/ivanoff/2valid/tree/2.1.2) (2016-08-25)
 [Full Changelog](http://github.com/ivanoff/2valid/compare/2.1.1...2.1.2)
 
