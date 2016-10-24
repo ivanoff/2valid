@@ -1,5 +1,13 @@
 # Config changelog
 
+## [2.1.4](http://github.com/ivanoff/2valid/tree/2.1.4) (2016-09-24)
+[Full Changelog](http://github.com/ivanoff/2valid/compare/2.1.3...2.1.4)
+
+**What Was Done:**
+
+- add boolean type
+
+
 ## [2.1.3](http://github.com/ivanoff/2valid/tree/2.1.3) (2016-09-22)
 [Full Changelog](http://github.com/ivanoff/2valid/compare/2.1.2...2.1.3)
 

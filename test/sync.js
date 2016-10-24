@@ -86,6 +86,36 @@ describe('Sync 2valid tests', function () {
     });
 
 
+    describe('Model to validate integer data', function() {
+
+        it('register model with boolean', function() {
+            this.vm.registerModel( 'user_bool_sync', {
+                isAlive:   { type: 'integer' },
+            }).should.be.false;
+
+            it('check boolean data', function() {
+                this.vm.validate( 'user_bool_sync',
+                    { isAlive : true }
+                ).should.eql({});
+            });
+
+            it('check boolean data', function() {
+                this.vm.validate( 'user_bool_sync',
+                    { isAlive : false }
+                ).should.eql({});
+            });
+
+            it('check bad boolean data', function() {
+                this.vm.validate( 'user_bool_sync',
+                    { isAlive : 123 }
+                ).should.eql({ notMatched: { '.isAlive': 'boolean' }, text: 'Field .isAlive not matched with type boolean' });
+            });
+        });
+
+
+    });
+
+
     describe('Model to validate password', function() {
 
         it('register model with password', function() {

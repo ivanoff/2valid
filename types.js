@@ -40,6 +40,12 @@ module.exports = {
         },
     },
 
+    boolean : {
+        check : function( bool ){
+            return typeof bool === 'boolean';
+        },
+    },
+
     date : { // date methods
         check : function( date ){  // date.check Maximum length of the string
             return date instanceof Date && typeof date.getMonth === 'function';

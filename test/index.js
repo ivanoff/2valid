@@ -206,6 +206,45 @@ describe('2valid tests', function () {
     });
 
 
+    describe('Model to validate boolean data', function() {
+
+        it('register model with boolean', function(done) {
+            this.vm.registerModel( 'user_bool', {
+                isAlive: { type: 'boolean' },
+            }).should.be.false;
+            done();
+        });
+
+        it('validate passed', function(done) {
+            this.vm.validate( 'user_bool', {
+                isAlive : true
+            }, function(err) {
+                should.not.exist(err);
+                done();
+            });
+        });
+
+        it('validate passed string', function(done) {
+            this.vm.validate( 'user_bool', {
+                isAlive : false
+            }, function(err) {
+                should.not.exist(err);
+                done();
+            });
+        });
+
+        it('check bad integer data', function(done) {
+            this.vm.validate( 'user_bool', {
+                isAlive : 123
+            }, function(err) {
+                err.should.eql({ notMatched: { '.isAlive': 'boolean' }, text: 'Field .isAlive not matched with type boolean' });
+                done();
+            });
+        });
+
+    });
+
+
     describe('Model to validate password', function() {
 
         it('register model with integer', function(done) {
