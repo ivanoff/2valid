@@ -150,7 +150,7 @@ describe('2valid tests', function () {
             this.vm.validate( 'user_int', {
                 id : "123"
             }, function(err) {
-                should.not.exist(err);
+                err.should.eql({ notMatched: { '.id': 'integer' }, text: 'Field .id not matched with type integer' });
                 done();
             });
         });
@@ -198,7 +198,7 @@ describe('2valid tests', function () {
             this.vm.validate( 'user_float', {
                 id : "123.321"
             }, function(err) {
-                should.not.exist(err);
+                err.should.eql({ notMatched: { '.id': 'float' }, text: 'Field .id not matched with type float' });
                 done();
             });
         });

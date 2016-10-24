@@ -6,6 +6,7 @@
 **What Was Done:**
 
 - add boolean type
+- check integer in not string
 
 
 ## [2.1.3](http://github.com/ivanoff/2valid/tree/2.1.3) (2016-09-22)
