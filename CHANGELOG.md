@@ -1,4 +1,12 @@
-# Config changelog
+# 2valid changelog
+
+## [2.1.5](http://github.com/ivanoff/2valid/tree/2.1.5) (2016-11-17)
+[Full Changelog](http://github.com/ivanoff/2valid/compare/2.1.4...2.1.5)
+
+**What Was Done:**
+
+- add notRequired option
+
 
 ## [2.1.4](http://github.com/ivanoff/2valid/tree/2.1.4) (2016-09-24)
 [Full Changelog](http://github.com/ivanoff/2valid/compare/2.1.3...2.1.4)

@@ -39,6 +39,24 @@ describe('Sync 2valid tests', function () {
               text: 'Field .createdAt not required. Field .name.first not found' });
         });
 
+    });
+
+
+    describe('Model to validate notRequired data', function () {
+
+        it('register new model', function() {
+            this.vm.validate( 'user_sync', {
+                id    : '61cecfb4-da43-4b65-aaa0-f1c3be81ec53',
+                name  : { first : 'Alex', last: 'Validates', },
+                metadata: { tt1:1, tt2:2 },
+            }, {notRequired: 1} ).should.eql({});
+
+            this.vm.validate( 'user_sync', {
+                id    : '61cecfb4-da43-4b65-aaa0-f1c3be81ec53',
+                name  : { last: 'Validates', },
+                metadata: { tt1:1, tt2:2 },
+            }, {notRequired: 1} ).should.eql({});
+        });
 
     });
 

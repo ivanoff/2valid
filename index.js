@@ -85,17 +85,19 @@ exports.showModelsExpanded = function() {
 }
 
 // check for required fields recursively
-function validateObjectRequired ( modelObject, entity, parents, errors ) {
+function validateObjectRequired ( options, modelObject, entity, parents, errors ) {
+    if( !options ) options = {};
     if( !errors ) errors = {};
     for( var key in modelObject ){
         if ( !modelObject[ key ].type ) {
             validateObjectRequired (
+                    options,
                     modelObject[ key ],
                     entity? entity[ key ] : {},
                     parents? `${parents}.${key}` : key,
                     errors )
-        } 
-        else if( modelObject[ key ].required && ( !entity || !entity[ key ] ) ) {
+        }
+        else if( !options.notRequired && modelObject[ key ].required && ( !entity || !entity[ key ] ) ) {
             if(!errors.notFound) errors.notFound = [];
             errors.notFound.push(`${parents}.${key}`);
 
@@ -131,7 +133,12 @@ function validateObjectEntity ( modelObject, entity, parents, errors ) {
 }
 
 // Check if entity pass modelName's validation
-exports.validate = function( modelName, entity, next ) {
+exports.validate = function( modelName, entity, options, next ) {
+    if(typeof options === "function") {
+      next = options;
+      options = {};
+    }
+
     var modelObject = this.registeredModels[modelName];
 
     if(typeof(modelName) === 'object') {
@@ -142,7 +149,7 @@ exports.validate = function( modelName, entity, next ) {
     }
 
     var errors = validateObjectRequired (
-                    modelObject, entity, [],
+                    options, modelObject, entity, [],
                     validateObjectEntity ( modelObject, entity, [] ) 
                  );
     if(errors && errors.text) errors.text = errors.text.join('. ');

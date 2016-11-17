@@ -99,6 +99,32 @@ describe('2valid tests', function () {
 
     });
 
+    describe('Model to validate not required data', function () {
+
+        it('validate passed', function(done) {
+            this.vm.validate( 'user', {
+                id    : '61cecfb4-da43-4b65-aaa0-f1c3be81ec53',
+                name  : { first : 'Alex', last: 'Validates', },
+                metadata: { tt1:1, tt2:2 },
+            }, {notRequired: 1}, function(err) {
+                should.not.exist(err);
+                done();
+            });
+        });
+
+        it('validate failed', function(done) {
+            this.vm.validate( 'user', {
+                id    : '61cecfb4-da43-4b65-aaa0-f1c3be81ec53',
+                name  : { last: 'Validates', },
+                metadata: { tt1:1, tt2:2 },
+            }, {notRequired: 1}, function(err) {
+                should.not.exist(err);
+                done();
+            });
+        });
+
+    });
+
     describe('Model to validate match data', function () {
 
         it('register model with match data', function(done) {
