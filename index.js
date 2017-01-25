@@ -95,13 +95,14 @@ function validateObjectRequired ( options, modelObject, entity, parents, errors 
                     options,
                     modelObject[ key ],
                     entity[ key ],
-                    `${parents}.${key}`,
+                    parents + '.' + key,
                     errors )
         }
         else if( !options.notRequired && modelObject[ key ].required && ( !entity || !entity[ key ] ) ) {
             if(!errors.notFound) errors.notFound = [];
-            errors.notFound.push(`${parents}.${key}`);
-            errors.text.push(`Field ${parents}.${key} not found`);
+            var fieldName = parents + '.' + key;
+            errors.notFound.push(fieldName);
+            errors.text.push('Field ' + fieldName + ' not found');
         }
     }
     return errors;
@@ -111,13 +112,14 @@ function validateObjectEntity ( modelObject, entity, parents, errors ) {
     if( !errors ) errors = {};
     if( !parents ) parents = [];
     for( var key in entity ){
+        var fieldName = parents + '.' + key;
         if ( !modelObject[ key ] ) {
             if(!errors.notRequired) errors.notRequired = [];
-            errors.notRequired.push(`${parents}.${key}`);
+            errors.notRequired.push(fieldName);
 
             if(!errors.text) errors.text = [];
 
-            errors.text.push(`Field ${parents}.${key} not required`);
+            errors.text.push('Field ' + fieldName + ' not required');
         }
         else if ( !modelObject[ key ].type ) {
             validateObjectEntity ( modelObject[ key ], entity[ key ], [parents, key], errors )
@@ -126,8 +128,8 @@ function validateObjectEntity ( modelObject, entity, parents, errors ) {
             if(!errors.notMatched) errors.notMatched = {};
             if(!errors.text) errors.text = [];
 
-            errors.notMatched[`${parents}.${key}`] = modelObject[key].type;
-            errors.text.push(`Field ${parents}.${key} not matched with type ${modelObject[key].type}`);
+            errors.notMatched[fieldName] = modelObject[key].type;
+            errors.text.push('Field ' + fieldName + ' not matched with type ' + modelObject[key].type);
         }
     }
     return errors;
