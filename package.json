@@ -30,6 +30,8 @@
   },
   "homepage": "https://github.com/ivanoff/validate-me",
   "devDependencies": {
+    "coveralls": "^2.11.15",
+    "istanbul": "^0.4.5",
     "chai": "^3.3.0",
     "mocha": "^2.3.3"
   }
