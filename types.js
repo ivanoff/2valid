@@ -23,7 +23,7 @@ module.exports = {
             return typeof number === 'number'
                     && number >= this.min
                     && number <= this.max
-                    && !`${number}`.match(/\./);
+                    && !number.toString().match(/\./);
         },
     },
 
@@ -53,7 +53,7 @@ module.exports = {
     email : { // date methods
         match : /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]+/i,
         check : function( email ){  // date.check Maximum length of the string
-            return `${email}`.match( this.match );
+            return email.toString().match( this.match );
         },
     },
 
@@ -73,14 +73,14 @@ module.exports = {
     md5 : {
         match : /^[\da-f]{32}$/,
         check : function( md5 ){
-            return md5 && `${md5}`.match( this.match );
+            return md5 && md5.toString().match( this.match );
         },
     },
 
     uuid : { // uuid methods. uuid.check returns true if parameter looks like UUID, false otherwise 
         match : /^[\da-z]{8}-[\da-z]{4}-4[\da-z]{3}-[\da-z]{4}-[\da-z]{12}$/,
         check : function( uuid ){
-            return uuid && `${uuid}`.match( this.match );
+            return uuid && uuid.toString().match( this.match );
         },
     },
 
