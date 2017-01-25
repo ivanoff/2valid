@@ -45,6 +45,8 @@ console.log( v.validate('password', '!A1e') ); // null
 | string | string |
 | integer | integer number |
 | float | float number |
+| boolean | boolean |
+| array | array type |
 | date | date methods |
 | email | simple e-mail |
 | password | password, minimum 4 chars, at least one caps and one small letter, digit and special |
