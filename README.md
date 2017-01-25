@@ -388,5 +388,5 @@ Dimitry, 2@ivanoff.org.ua
 [appveyor-url]: https://ci.appveyor.com/project/ivanoff/2valid/branch/master
 [appveyor-image]: https://ci.appveyor.com/api/projects/status/lp3nhnam1eyyqh33/branch/master?svg=true
 
-[coveralls-url]: https://coveralls.io/github/ivanoff/2valid?branch=master
-[coveralls-image]: https://coveralls.io/repos/github/ivanoff/2valid/badge.svg?branch=master
+[coveralls-url]: https://coveralls.io/github/ivanoff/2valid
+[coveralls-image]: https://coveralls.io/repos/github/ivanoff/2valid/badge.svg
