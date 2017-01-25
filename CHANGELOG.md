@@ -8,6 +8,7 @@
 - add boolean type
 - add array type
 - add examples for each type
+- made 100% testing code coverage
 
 
 ## [2.1.5](http://github.com/ivanoff/2valid/tree/2.1.5) (2016-11-17)

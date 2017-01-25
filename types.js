@@ -84,6 +84,12 @@ module.exports = {
         },
     },
 
+    array : {
+        check : function( arr ){
+            return typeof arr === 'object' && Array.isArray(arr);
+        },
+    },
+
     object : {
         check : function(){ return 1 }
     },
