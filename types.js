@@ -59,7 +59,7 @@ module.exports = {
 
     password : {
         min   : 4,          // minimum length of the password
-        max   : Infinity,
+        max   : 1000,       // maximum length of the password
         // at least one caps and one small letter, digit and special
         match : /^.*(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).*$/,
         check : function( password ) {   // check password type and size

@@ -1,8 +1,17 @@
+
+[![NPM version][npm-version-image]][npm-url]
+[![NPM downloads][npm-downloads-image]][npm-url]
+[![MIT License][license-image]][license-url]
+[![Build Status: Linux][travis-image]][travis-url]
+[![Build Status: Windows][appveyor-image]][appveyor-url]
+[![Coverage Status][coveralls-image]][coveralls-url]
+
+
 # 2valid
 
 ### JavaScript simple data validator
 
- v2.1.4
+ v2.2.1
 
 
 ## Installation
@@ -354,6 +363,7 @@ myLibrary.registerModel( 'name_exception', { id: { type: 'guid' } } );
 * 0.3.2 Change quotes in messages
 * 0.4.1 Replace result with notFound, notMatched and text keys
 * 2.0.1 Rename project to 2valid
+* 2.2.1 Add boolean and array types, add examples
 
 
 ## Created by
@@ -362,3 +372,19 @@ Dimitry, 2@ivanoff.org.ua
 
 ```curl -A cv ivanoff.org.ua```
 
+
+[license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
+[license-url]: LICENSE
+
+[npm-url]: https://npmjs.org/package/2valid
+[npm-version-image]: http://img.shields.io/npm/v/2valid.svg?style=flat
+[npm-downloads-image]: http://img.shields.io/npm/dm/2valid.svg?style=flat
+
+[travis-url]: https://travis-ci.org/ivanoff/2valid
+[travis-image]: https://travis-ci.org/ivanoff/2valid.svg?branch=master
+
+[appveyor-url]: https://ci.appveyor.com/project/ivanoff/2valid/branch/master
+[appveyor-image]: https://ci.appveyor.com/api/projects/status/lp3nhnam1eyyqh33/branch/master?svg=true
+
+[coveralls-url]: https://coveralls.io/github/ivanoff/2valid?branch=master
+[coveralls-image]: https://coveralls.io/repos/github/ivanoff/2valid/badge.svg?branch=master

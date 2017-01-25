@@ -1,5 +1,15 @@
 # 2valid changelog
 
+## [2.2.1](http://github.com/ivanoff/2valid/tree/2.2.1) (2017-01-24)
+[Full Changelog](http://github.com/ivanoff/2valid/compare/2.1.5...2.2.1)
+
+**What Was Done:**
+
+- add boolean type
+- add array type
+- add examples for each type
+
+
 ## [2.1.5](http://github.com/ivanoff/2valid/tree/2.1.5) (2016-11-17)
 [Full Changelog](http://github.com/ivanoff/2valid/compare/2.1.4...2.1.5)
 

@@ -32,7 +32,7 @@ describe('2valid tests', function () {
     describe('Simple model to validate', function () {
 
         var userModel = {
-            id: {type: 'integer'},
+            id: {type: 'integer', required: true},
             name: {type: 'string', required: true}
         };
 
@@ -52,6 +52,28 @@ describe('2valid tests', function () {
                     err.should.eql({ notMatched: { '.id': 'integer' },
                         text: 'Field .id not matched with type integer. Field .secondName not required. Field .name not found',
                         notRequired: [ '.secondName' ], notFound: [ '.name' ] });
+                    done();
+            });
+        });
+
+        it('validate failed', function(done) {
+            this.vm.validate( userModel,
+                { id: 'Max', name: 123 },
+                function(err) {
+                    err.should.eql({ notMatched: { '.id': 'integer', '.name' : 'string' },
+                        text: 'Field .id not matched with type integer. Field .name not matched with type string'
+                    });
+                    done();
+            });
+        });
+
+        it('validate failed', function(done) {
+            this.vm.validate( userModel,
+                { secondName: 'Validator', pages: 12 },
+                function(err) {
+                    err.should.eql({
+                        text: 'Field .secondName not required. Field .pages not required. Field .id not found. Field .name not found',
+                        notRequired: [ '.secondName', '.pages' ], notFound: [ '.id', '.name' ] });
                     done();
             });
         });

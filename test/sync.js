@@ -21,6 +21,7 @@ describe('Sync 2valid tests', function () {
                     last  : { type: 'string', min: 1, max: 256 },
                 },
                 email: { type: 'email' },
+                birthday: { type: 'date' },
                 metadata: { type: 'object' },
             }).should.be.false;
 
@@ -34,6 +35,8 @@ describe('Sync 2valid tests', function () {
                 id    : '61cecfb4-da43-4b65-aaa0-f1c3be81ec53',
                 name  : { last: 'Validates', },
                 metadata: { tt1:1, tt2:2 },
+                email : 'max.validator@my.site',
+                birthday : new Date('1980-04-01'),
                 createdAt : new Date(),
             }).should.eql({ notFound: [ '.name.first' ], notRequired: [ '.createdAt' ],
               text: 'Field .createdAt not required. Field .name.first not found' });

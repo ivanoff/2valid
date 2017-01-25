@@ -1,6 +1,6 @@
 /*!
  * validate-me
- * Copyright(c) 2015 ivanoff .$ curl -A cv ivanoff.org.ua
+ * Copyright(c) 2015-2017 ivanoff .$ curl -A cv ivanoff.org.ua
  * MIT Licensed
  */
 
@@ -25,16 +25,16 @@ function deepLook ( obj, types ){
             if ( typeof obj[key].min !== 'undefined'
                     && typeof types[ obj[key].type ].min !== 'undefined'
                     && types[ obj[key].type ].min > obj[key].min ) {
-                throw new Error('In model '+ modelName +', key '+ key +' minimal value ( '+ obj[key].min
+                throw new Error('Key '+ key +' minimal value ( '+ obj[key].min
                                 +' ) is less than acceptable minimal in Types ( '
                                 + types[ obj[key].type ].min + ' )' );
             }
             if ( typeof obj[key].max !== 'undefined'
                     && typeof types[ obj[key].type ].max !== 'undefined'
                     && types[ obj[key].type ].max < obj[key].max ) {
-                throw new Error('In model '+ modelName +', key '+ key +' maximal value ( '+ obj[key].max
+                throw new Error('Key '+ key +' maximal value ( '+ obj[key].max
                                 +' ) is in excess of maximal acceptable value in Types ( '
-                                + types[ obj[key].type ].min + ' )' );
+                                + types[ obj[key].type ].max + ' )' );
             }
         }
         // get properties and methods from Types
@@ -63,45 +63,44 @@ exports.registerModel = function ( modelName, modelObject ) {
 // Show information of registered models. All registered models are stored in .registeredModels
 // If params.displayEverything is true, module will show additional info
 exports.showModels = function( params ) {
+    var res = [];
     if ( typeof( params ) === 'undefined' ) params = { displayEverything: false };
-    if ( ! this.registeredModels ) {
-        console.log( 'There is no registered models' );
+    if ( ! this.registeredModels || Object.keys(this.registeredModels).length === 0 ) {
+        res.push( 'There is no registered models' );
     } else {
-        console.log( 'List of registered models' );
+        res.push( 'List of registered models' );
         for( var modelName in this.registeredModels ){
-            console.log( '  - ' + modelName );
+            res.push( '  - ' + modelName );
             if( params.displayEverything ) {
                 for( var key in this.registeredModels[ modelName ] ){
-                    console.log( '      ' + key + ' : ' + this.registeredModels[ modelName ][ key ].type );
+                    res.push( '      ' + key + ' : ' + this.registeredModels[ modelName ][ key ].type );
                 }
             }
         }
     }
+    return res.join("\n");
 }
 
 // Show expanded information of registared models
 exports.showModelsExpanded = function() {
-    this.showModels( { displayEverything: true } );
+    return this.showModels( { displayEverything: true } );
 }
 
 // check for required fields recursively
 function validateObjectRequired ( options, modelObject, entity, parents, errors ) {
     if( !options ) options = {};
-    if( !errors ) errors = {};
     for( var key in modelObject ){
         if ( !modelObject[ key ].type ) {
             validateObjectRequired (
                     options,
                     modelObject[ key ],
-                    entity? entity[ key ] : {},
-                    parents? `${parents}.${key}` : key,
+                    entity[ key ],
+                    `${parents}.${key}`,
                     errors )
         }
         else if( !options.notRequired && modelObject[ key ].required && ( !entity || !entity[ key ] ) ) {
             if(!errors.notFound) errors.notFound = [];
             errors.notFound.push(`${parents}.${key}`);
-
-            if(!errors.text) errors.text = [];
             errors.text.push(`Field ${parents}.${key} not found`);
         }
     }
@@ -110,22 +109,24 @@ function validateObjectRequired ( options, modelObject, entity, parents, errors 
 // check for extra fields and match recursively
 function validateObjectEntity ( modelObject, entity, parents, errors ) {
     if( !errors ) errors = {};
+    if( !parents ) parents = [];
     for( var key in entity ){
         if ( !modelObject[ key ] ) {
             if(!errors.notRequired) errors.notRequired = [];
             errors.notRequired.push(`${parents}.${key}`);
 
             if(!errors.text) errors.text = [];
+
             errors.text.push(`Field ${parents}.${key} not required`);
         }
         else if ( !modelObject[ key ].type ) {
-            validateObjectEntity ( modelObject[ key ], entity[ key ], parents? [ parents, key ] : key, errors )
+            validateObjectEntity ( modelObject[ key ], entity[ key ], [parents, key], errors )
         }
         else if( !modelObject[ key ].check( entity[ key ] ) ) {
             if(!errors.notMatched) errors.notMatched = {};
-            errors.notMatched[`${parents}.${key}`] = modelObject[key].type;
-
             if(!errors.text) errors.text = [];
+
+            errors.notMatched[`${parents}.${key}`] = modelObject[key].type;
             errors.text.push(`Field ${parents}.${key} not matched with type ${modelObject[key].type}`);
         }
     }
@@ -150,7 +151,7 @@ exports.validate = function( modelName, entity, options, next ) {
 
     var errors = validateObjectRequired (
                     options, modelObject, entity, [],
-                    validateObjectEntity ( modelObject, entity, [] ) 
+                    validateObjectEntity ( modelObject, entity )
                  );
     if(errors && errors.text) errors.text = errors.text.join('. ');
 
@@ -166,4 +167,3 @@ exports.dispose = function() {
     this.registeredModels = [];
     return 1;
 }
-
