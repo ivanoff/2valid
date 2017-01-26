@@ -164,6 +164,14 @@ exports.validate = function( modelName, entity, options, next ) {
     }
 }
 
+exports.getAllTypes = function() {
+  return Object.keys(this.types);
+}
+
+exports.getExample = function(type) {
+  return this.types[type]? this.types[type].example : undefined;
+}
+
 // 'Forget' about all registered models
 exports.dispose = function() {
     this.registeredModels = [];

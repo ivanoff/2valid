@@ -11,7 +11,7 @@
 
 ### JavaScript simple data validator
 
- v2.2.1
+ v2.2.2
 
 
 ## Installation
@@ -365,7 +365,8 @@ myLibrary.registerModel( 'name_exception', { id: { type: 'guid' } } );
 * 0.3.2 Change quotes in messages
 * 0.4.1 Replace result with notFound, notMatched and text keys
 * 2.0.1 Rename project to 2valid
-* 2.2.1 Add boolean and array types, add examples
+* 2.2.1 Add boolean and array types
+* 2.2.2 Add examples
 
 
 ## Created by
