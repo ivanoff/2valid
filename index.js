@@ -109,16 +109,15 @@ function validateObjectRequired ( options, modelObject, entity, parents, errors 
 }
 // check for extra fields and match recursively
 function validateObjectEntity ( modelObject, entity, parents, errors ) {
-    if( !errors ) errors = {};
-    if( !parents ) parents = [];
+    if(!errors) errors = {};
+    if(!errors.text) errors.text = [];
+    if(!parents) parents = [];
+
     for( var key in entity ){
         var fieldName = parents + '.' + key;
         if ( !modelObject[ key ] ) {
             if(!errors.notRequired) errors.notRequired = [];
             errors.notRequired.push(fieldName);
-
-            if(!errors.text) errors.text = [];
-
             errors.text.push('Field ' + fieldName + ' not required');
         }
         else if ( !modelObject[ key ].type ) {
@@ -126,8 +125,6 @@ function validateObjectEntity ( modelObject, entity, parents, errors ) {
         }
         else if( !modelObject[ key ].check( entity[ key ] ) ) {
             if(!errors.notMatched) errors.notMatched = {};
-            if(!errors.text) errors.text = [];
-
             errors.notMatched[fieldName] = modelObject[key].type;
             errors.text.push('Field ' + fieldName + ' not matched with type ' + modelObject[key].type);
         }
@@ -155,6 +152,7 @@ exports.validate = function( modelName, entity, options, next ) {
                     options, modelObject, entity, [],
                     validateObjectEntity ( modelObject, entity )
                  );
+    if(!errors.text[0]) errors = {};
     if(errors && errors.text) errors.text = errors.text.join('. ');
 
     if (typeof next === "function") {
