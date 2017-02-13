@@ -2,6 +2,7 @@
 [![NPM version][npm-version-image]][npm-url]
 [![NPM downloads][npm-downloads-image]][npm-url]
 [![MIT License][license-image]][license-url]
+[![js-standard-style][standard-style-image]][standard-style-url]
 [![Build Status: Linux][travis-image]][travis-url]
 [![Build Status: Windows][appveyor-image]][appveyor-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
@@ -11,7 +12,7 @@
 
 ### JavaScript simple data validator
 
- v2.2.2
+ v2.2.4
 
 
 ## Installation
@@ -378,6 +379,9 @@ Dimitry, 2@ivanoff.org.ua
 
 [license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
 [license-url]: LICENSE
+
+[standard-style-image]: https://img.shields.io/badge/code%20style-airbnb-blue.svg?style=flat
+[standard-style-url]: https://github.com/airbnb/javascript
 
 [npm-url]: https://npmjs.org/package/2valid
 [npm-version-image]: http://img.shields.io/npm/v/2valid.svg?style=flat
