@@ -172,8 +172,22 @@ exports.getAllTypes = function () {
   return Object.keys(this.types);
 };
 
+// Get one example for type
 exports.getExample = function (type) {
-  return this.types[type] ? this.types[type].example : undefined;
+  var examples = this.getExamples(type);
+  return examples[0];
+};
+
+// Get one random example for type
+exports.getRandomExample = function (type) {
+  var examples = this.getExamples(type);
+  return examples[Math.floor(Math.random() * examples.length)];
+};
+
+// Get all examples for type
+// Result: Array
+exports.getExamples = function (type) {
+  return this.types[type] ? this.types[type].examples : [];
 };
 
 // 'Forget' about all registered models

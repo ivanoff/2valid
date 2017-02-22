@@ -14,7 +14,7 @@ module.exports = {
                    );
           },
 
-        example: 'Test string',
+        examples: ['Test string', 'foo', 'bar'],
       },
 
     integer: { // number properties and methods
@@ -28,7 +28,7 @@ module.exports = {
                     && !number.toString().match(/\./);
           },
 
-        example: 123,
+        examples: [123, 345, 12345, 4321],
       },
 
     float: { // number properties and methods
@@ -41,7 +41,7 @@ module.exports = {
                     && number <= this.max;
           },
 
-        example: 123.456,
+        examples: [123.456, 12.12, 129.2],
       },
 
     boolean: {
@@ -49,7 +49,7 @@ module.exports = {
             return typeof bool === 'boolean';
           },
 
-        example: true,
+        examples: [true, false],
       },
 
     date: { // date methods
@@ -57,7 +57,7 @@ module.exports = {
             return date instanceof Date && typeof date.getMonth === 'function';
           },
 
-        example: new Date(),
+        examples: [new Date(), new Date(99, 5, 24), new Date(86400000)],
       },
 
     email: { // validate e-mail
@@ -66,7 +66,7 @@ module.exports = {
             return email.toString().match(this.match);
           },
 
-        example: 'news@site.com',
+        examples: ['news@site.com', 'demo@site.net', 'noreply@site.demo'],
       },
 
     password: {
@@ -81,7 +81,7 @@ module.exports = {
                     && password.match(this.match);
           },
 
-        example: 'JHtG<3',
+        examples: ['JHtG<3', 'r2d2Ro60!', 'vAr$$t0p!'],
       },
 
     md5: {
@@ -90,7 +90,7 @@ module.exports = {
             return md5 && md5.toString().match(this.match);
           },
 
-        example: 'c4ca4238a0b923820dcc509a6f75849b',
+        examples: ['c4ca4238a0b923820dcc509a6f75849b', '1bc29b36f623ba82aaf6724fd3b16718'],
       },
 
     uuid: { // uuid methods. uuid.check returns true if parameter looks like UUID, false otherwise
@@ -99,7 +99,7 @@ module.exports = {
             return uuid && uuid.toString().match(this.match);
           },
 
-        example: '4ca0025f-9618-4328-811e-f030b9c82af9',
+        examples: ['4ca0025f-9618-4328-811e-f030b9c82af9', 'eacb7ac5-4fca-4394-ba5c-63437c63b095'],
       },
 
     array: {
@@ -107,13 +107,13 @@ module.exports = {
             return typeof arr === 'object' && Array.isArray(arr);
           },
 
-        example: [1, 'a', 'b'],
+        examples: [[1, 'a', 'b'], ['a', 'b'], [1, 2, 3]],
       },
 
     object: {
         check: function () { return 1; },
 
-        example: {},
+        examples: [{}],
       },
 
   };

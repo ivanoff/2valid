@@ -12,7 +12,7 @@
 
 ### JavaScript simple data validator
 
- v2.2.4
+ v2.3.1
 
 
 ## Installation
@@ -37,6 +37,15 @@ Check for password. Minimum 4 chars, at least one caps and one small letter, dig
 var v = require('2valid');
 console.log( v.validate('password', 'As1eRR') ); // { notMatched: 'password' } 
 console.log( v.validate('password', '!A1e') ); // null
+```
+
+Get examples
+
+```javascript
+var v = require('2valid');
+var example = v.getExample('email');
+console.log( example ); // news@site.com
+console.log( v.validate('email', example) ); // null (email is valid)
 ```
 
 ## Available types

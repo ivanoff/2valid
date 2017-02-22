@@ -1,5 +1,22 @@
 # 2valid changelog
 
+## [2.3.1](http://github.com/ivanoff/2valid/tree/2.3.1) (2017-02-22)
+[Full Changelog](http://github.com/ivanoff/2valid/compare/2.2.4...2.3.1)
+
+**What Was Done:**
+
+- add more examples
+- add getRandomExample function
+
+
+## [2.2.4](http://github.com/ivanoff/2valid/tree/2.2.4) (2017-02-13)
+[Full Changelog](http://github.com/ivanoff/2valid/compare/2.2.2...2.2.4)
+
+**What Was Done:**
+
+- make airbnb style
+
+
 ## [2.2.2](http://github.com/ivanoff/2valid/tree/2.2.2) (2017-01-26)
 [Full Changelog](http://github.com/ivanoff/2valid/compare/2.2.1...2.2.2)
 
