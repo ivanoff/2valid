@@ -7,6 +7,7 @@
 
 - add more examples
 - add getRandomExample function
+- add getExample workflow to readme
 
 
 ## [2.2.4](http://github.com/ivanoff/2valid/tree/2.2.4) (2017-02-13)
