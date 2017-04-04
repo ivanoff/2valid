@@ -26,7 +26,8 @@ describe('example', function () {
             for (var i = 0; i < types.length; i++) {
               var example = this.vm.getExamples(types[i]);
               example.should.be.instanceof(Array);
-              this.vm.validate(types[i], example[0], function (err) {
+              var opt = (types[i] !== 'any')? {} : {one:['Male','Female']};
+              this.vm.validate(types[i], example[0], opt, function (err) {
                 (err === null).should.be.true;
               });
             }
@@ -38,7 +39,8 @@ describe('example', function () {
             var types = this.vm.getAllTypes();
             for (var i = 0; i < types.length; i++) {
               var example = this.vm.getExample(types[i]);
-              this.vm.validate(types[i], example, function (err) {
+              var opt = (types[i] !== 'any')? {} : {one:['Male','Female']};
+              this.vm.validate(types[i], example, opt, function (err) {
                 (err === null).should.be.true;
               });
             }
@@ -50,7 +52,8 @@ describe('example', function () {
             var types = this.vm.getAllTypes();
             for (var i = 0; i < types.length; i++) {
               var example = this.vm.getRandomExample(types[i]);
-              this.vm.validate(types[i], example, function (err) {
+              var opt = (types[i] !== 'any')? {} : {one:['Male','Female']};
+              this.vm.validate(types[i], example, opt, function (err) {
                 (err === null).should.be.true;
               });
             }

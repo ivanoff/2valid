@@ -12,7 +12,7 @@
 
 ### JavaScript simple data validator
 
- v2.3.2
+ v2.4.1
 
 
 ## Installation
@@ -25,8 +25,8 @@ Check for integer
 
 ```javascript
 var v = require('2valid');
-console.log( v.validate('integer', 111) ); //null 
-console.log( v.validate('integer', 'aaa') ); // { notMatched: 'integer' } 
+console.log( v.validate('integer', 111) ); //null
+console.log( v.validate('integer', 'aaa') ); // { notMatched: 'integer' }
 ```
 
 ## Usage ( password validator )
@@ -35,7 +35,7 @@ Check for password. Minimum 4 chars, at least one caps and one small letter, dig
 
 ```javascript
 var v = require('2valid');
-console.log( v.validate('password', 'As1eRR') ); // { notMatched: 'password' } 
+console.log( v.validate('password', 'As1eRR') ); // { notMatched: 'password' }
 console.log( v.validate('password', '!A1e') ); // null
 ```
 
@@ -62,6 +62,7 @@ console.log( v.validate('email', example) ); // null (email is valid)
 | password | password, minimum 4 chars, at least one caps and one small letter, digit and special |
 | md5 | MD5 string |
 | uuid | UUID string |
+| any | any of elements of array |
 
 
 ## Results
@@ -228,6 +229,18 @@ console.log(v.validate('cmyk', {name: 'Magenta'}));
 // { notMatched: { '.name': 'string' }, text: 'Field .name not matched with type string' }
 console.log(v.validate('cmyk', {name: 'black'}));
 console.log(v.validate('cmyk', {name: 123}));
+```
+
+
+### Any validator
+
+Only 'cyan', 'magenta', 'yellow' or 'key' can passed in ```cmyk``` model to validate
+
+```javascript
+var v = require('2valid');
+
+console.log(v.validate('any', 'yellow', {one: ['cyan', 'magenta', 'yellow', 'key']})); //passed
+console.log(v.validate('any', 123, {one: ['cyan', 'magenta', 'yellow', 'key']})); //{ notMatched: 'any' }
 ```
 
 

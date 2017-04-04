@@ -110,6 +110,15 @@ module.exports = {
         examples: [[1, 'a', 'b'], ['a', 'b'], [1, 2, 3]],
       },
 
+    any: {
+        check: function (element) {
+            var hasOne = typeof this.one === 'object' && Array.isArray(this.one) && this.one[0];
+            return hasOne && this.one.indexOf(element) >= 0;
+          },
+
+        examples: ['Male', 'Female'],
+      },
+
     object: {
         check: function () { return 1; },
 

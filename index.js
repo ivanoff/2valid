@@ -1,5 +1,5 @@
 /*!
- * validate-me
+ * 2valid
  * Copyright(c) 2015-2017 ivanoff .$ curl -A cv ivanoff.org.ua
  * MIT Licensed
  */
@@ -51,7 +51,7 @@ function deepLook(obj, types) {
   return obj;
 };
 
-// Register new model. Return validate-me object
+// Register new model. Return 2valid object
 // Parameters: modelName - name of the model, modelObject - model object
 exports.registerModel = function (modelName, modelObject) {
 
@@ -94,7 +94,6 @@ exports.showModelsExpanded = function () {
 
 // check for required fields recursively
 function validateObjectRequired(options, modelObject, entity, parents, errors) {
-  if (!options) options = {};
   for (var key in modelObject) {
     if (!modelObject[key].type) {
       validateObjectRequired(
@@ -140,16 +139,15 @@ function validateObjectEntity(modelObject, entity, parents, errors) {
 
 // Check if entity pass modelName's validation
 exports.validate = function (modelName, entity, options, next) {
-  if (typeof options === 'function') {
-    next = options;
-    options = {};
-  }
+  if (typeof options === 'function') next = options;
+  if (!options) options = {};
 
   var modelObject = this.registeredModels[modelName];
 
   if (typeof modelName === 'object') {
     modelObject = deepLook(modelName, this.types);
   } else if (this.types[modelName]) {
+    if (options.one) this.types[modelName].one = options.one;
     var result = this.types[modelName].check(entity) ? null : { notMatched: modelName };
     return typeof next === 'function' ? next(result) : result;
   }
