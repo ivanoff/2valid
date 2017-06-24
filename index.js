@@ -96,7 +96,7 @@ exports.showModelsExpanded = function () {
 // check for required fields recursively
 function validateObjectRequired(options, modelObject, entity, parents, errors) {
   for (var key in modelObject) {
-    if (!modelObject[key].type) {
+    if (!modelObject[key].type && entity) {
       validateObjectRequired(
         options,
         modelObject[key],
