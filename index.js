@@ -14,6 +14,7 @@ exports.registeredModels = [];
 
 // Check new model before registration
 function deepLook(obj, types) {
+  if(typeof(obj) !== 'object') return obj;
   for (var key in obj) {
     if (!obj[key].type) {
       obj[key] = deepLook(obj[key], types);

@@ -1,7 +1,15 @@
 # 2valid changelog
 
-## [2.3.1](http://github.com/ivanoff/2valid/tree/2.3.1) (2017-02-22)
-[Full Changelog](http://github.com/ivanoff/2valid/compare/2.2.4...2.3.1)
+## [2.5.1](http://github.com/ivanoff/2valid/tree/2.5.1) (2017-06-24)
+[Full Changelog](http://github.com/ivanoff/2valid/compare/2.4.1...2.5.1)
+
+**What Was Done:**
+
+- avoid deep recursion
+
+
+## [2.4.1](http://github.com/ivanoff/2valid/tree/2.4.1) (2017-02-22)
+[Full Changelog](http://github.com/ivanoff/2valid/compare/2.3.1...2.4.1)
 
 **What Was Done:**
 
