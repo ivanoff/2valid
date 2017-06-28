@@ -367,6 +367,11 @@ describe('2valid tests', function () {
               });
           });
 
+        it('register model with no obj', function (done) {
+            this.vm.registerModel('user_none', { 'none': { some: 'obj' }}).should.be.false;
+            done();
+          });
+
       });
 
   });
