@@ -122,7 +122,7 @@ function validateObjectEntity(modelObject, entity, parents, errors) {
 
   for (var key in entity) {
     var fieldName = parents + '.' + key;
-    if (!modelObject[key]) {
+    if (!modelObject || !modelObject[key]) {
       if (!errors.notRequired) errors.notRequired = [];
       errors.notRequired.push(fieldName);
       errors.text.push('Field ' + fieldName + ' not required');

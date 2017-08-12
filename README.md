@@ -12,7 +12,7 @@
 
 ### JavaScript simple data validator
 
- v2.5.3
+ v2.5.4
 
 
 ## Installation

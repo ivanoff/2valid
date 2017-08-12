@@ -1,5 +1,13 @@
 # 2valid changelog
 
+## [2.5.4](http://github.com/ivanoff/2valid/tree/2.5.4) (2017-08-12)
+[Full Changelog](http://github.com/ivanoff/2valid/compare/2.5.1...2.5.4)
+
+**What Was Done:**
+
+- update to remove cannot read property of undefined error
+
+
 ## [2.5.1](http://github.com/ivanoff/2valid/tree/2.5.1) (2017-06-24)
 [Full Changelog](http://github.com/ivanoff/2valid/compare/2.4.1...2.5.1)
 
