@@ -5,17 +5,17 @@ var should = require('chai').should();
 describe('2valid show models', function () {
 
     beforeEach(function () {
-        this.vm = require('../index');
+        this.v = require('../index');
       });
 
     afterEach(function () {
-        this.vm = null;
+        this.v = null;
       });
 
     describe('delete all models', function () {
         it('dispose', function (done) {
-            this.vm.dispose().should.equal(1);
-            this.vm.showModels().should.equal('There is no registered models');
+            this.v.dispose().should.equal(1);
+            this.v.showModels().should.equal('There is no registered models');
             done();
           });
       });
@@ -23,7 +23,7 @@ describe('2valid show models', function () {
     describe('show all models', function () {
 
         it('showModels register', function (done) {
-            this.vm.registerModel('userToShow', {
+            this.v.registerModel('userToShow', {
                 id:   { type: 'uuid', required: true },
                 name: {
                     first: { type: 'string', min: 1, max: 256, required: true },
@@ -36,19 +36,19 @@ describe('2valid show models', function () {
           });
 
         it('showModelsExpanded', function (done) {
-            this.vm.showModelsExpanded().should.match(/- userToShow/);
-            this.vm.showModelsExpanded().should.match(/email/);
+            this.v.showModelsExpanded().should.match(/- userToShow/);
+            this.v.showModelsExpanded().should.match(/email/);
             done();
           });
 
         it('showModels', function (done) {
-            this.vm.showModels().should.match(/- userToShow/);
+            this.v.showModels().should.match(/- userToShow/);
             done();
           });
 
         it('showModels with params', function (done) {
-            this.vm.showModels({ displayEverything: true }).should.match(/- userToShow/);
-            this.vm.showModels({ displayEverything: true }).should.match(/email/);
+            this.v.showModels({ displayEverything: true }).should.match(/- userToShow/);
+            this.v.showModels({ displayEverything: true }).should.match(/email/);
             done();
           });
       });

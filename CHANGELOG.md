@@ -1,5 +1,14 @@
 # 2valid changelog
 
+## [3.1.1](http://github.com/ivanoff/2valid/tree/3.1.1) (2017-10-31)
+[Full Changelog](http://github.com/ivanoff/2valid/compare/2.5.4...3.1.1)
+
+**What Was Done:**
+
+- add valid function to return true if validate is ok. Or false if validate not passed.
+- add check function instead of depricateded validate one
+
+
 ## [2.5.4](http://github.com/ivanoff/2valid/tree/2.5.4) (2017-08-12)
 [Full Changelog](http://github.com/ivanoff/2valid/compare/2.5.1...2.5.4)
 

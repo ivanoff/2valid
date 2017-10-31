@@ -5,16 +5,11 @@
  */
 
 'use strict';
-
-// All avaible type defenitions are in types.js
-exports.types = require('./types');
-
-exports.errors = [];
-exports.registeredModels = [];
+var types = require('./types');
 
 // Check new model before registration
 function deepLook(obj, types) {
-  if(typeof(obj) !== 'object') return obj;
+  if (typeof (obj) !== 'object') return obj;
   for (var key in obj) {
     if (!obj[key].type) {
       obj[key] = deepLook(obj[key], types);
@@ -50,47 +45,6 @@ function deepLook(obj, types) {
   }
 
   return obj;
-};
-
-// Register new model. Return 2valid object
-// Parameters: modelName - name of the model, modelObject - model object
-exports.registerModel = function (modelName, modelObject) {
-
-  // check for name, object and if model already exists
-  if (!modelName) return ('Name is not defined');
-  if (!modelObject) return ('Model in ' + modelName + ' is not defined');
-  if (this.registeredModels[modelName])
-    return ('Model ' + modelName + ' is already registered');
-  var o = Object.create(modelObject);
-  this.registeredModels[modelName] = deepLook(o, this.types);
-  return false;
-};
-
-// Show information of registered models. All registered models are stored in .registeredModels
-// If params.displayEverything is true, module will show additional info
-exports.showModels = function (params) {
-  var res = [];
-  if (typeof (params) === 'undefined') params = { displayEverything: false };
-  if (!this.registeredModels || Object.keys(this.registeredModels).length === 0) {
-    res.push('There is no registered models');
-  } else {
-    res.push('List of registered models');
-    for (var modelName in this.registeredModels) {
-      res.push('  - ' + modelName);
-      if (params.displayEverything) {
-        for (var key in this.registeredModels[modelName]) {
-          res.push('      ' + key + ' : ' + this.registeredModels[modelName][key].type);
-        }
-      }
-    }
-  }
-
-  return res.join('\n');
-};
-
-// Show expanded information of registared models
-exports.showModelsExpanded = function () {
-  return this.showModels({ displayEverything: true });
 };
 
 // check for required fields recursively
@@ -138,60 +92,123 @@ function validateObjectEntity(modelObject, entity, parents, errors) {
   return errors;
 };
 
-// Check if entity pass modelName's validation
-exports.validate = function (modelName, entity, options, next) {
-  if (typeof options === 'function') next = options;
-  if (!options) options = {};
+exports = module.exports = {
 
-  var modelObject = this.registeredModels[modelName];
+  // All avaible type defenitions are in types.js
+  types: types,
 
-  if (typeof modelName === 'object') {
-    modelObject = deepLook(modelName, this.types);
-  } else if (this.types[modelName]) {
-    if (options.one) this.types[modelName].one = options.one;
-    var result = this.types[modelName].check(entity) ? null : { notMatched: modelName };
-    return typeof next === 'function' ? next(result) : result;
-  }
+  errors: [],
+  registeredModels: [],
 
-  var errors = validateObjectRequired(
-    options, modelObject, entity, [],
-    validateObjectEntity(modelObject, entity)
-  );
-  if (!errors.text[0]) errors = {};
-  if (errors && errors.text) errors.text = errors.text.join('. ');
+  // Register new model. Return 2valid object
+  // Parameters: modelName - name of the model, modelObject - model object
+  registerModel: function (modelName, modelObject) {
 
-  if (typeof next === 'function') {
-    next(Object.keys(errors).length ? errors : null);
-  } else {
-    return Object.keys(errors).length ? errors : {};
-  }
+    // check for name, object and if model already exists
+    if (!modelName) return ('Name is not defined');
+    if (!modelObject) return ('Model in ' + modelName + ' is not defined');
+    if (this.registeredModels[modelName])
+      return ('Model ' + modelName + ' is already registered');
+    var o = Object.create(modelObject);
+    this.registeredModels[modelName] = deepLook(o, this.types);
+    return false;
+  },
+
+  // Show information of registered models. All registered models are stored in .registeredModels
+  // If params.displayEverything is true, module will show additional info
+  showModels: function (params) {
+    var res = [];
+    if (typeof (params) === 'undefined') params = { displayEverything: false };
+    if (!this.registeredModels || Object.keys(this.registeredModels).length === 0) {
+      res.push('There is no registered models');
+    } else {
+      res.push('List of registered models');
+      for (var modelName in this.registeredModels) {
+        res.push('  - ' + modelName);
+        if (params.displayEverything) {
+          for (var key in this.registeredModels[modelName]) {
+            res.push('      ' + key + ' : ' + this.registeredModels[modelName][key].type);
+          }
+        }
+      }
+    }
+
+    return res.join('\n');
+  },
+
+  // Show expanded information of registared models
+  showModelsExpanded: function () {
+    return this.showModels({ displayEverything: true });
+  },
+
+  /**
+   * @deprecated Since version 3.0. Will be deleted in version 4.0. Use check instead.
+   */
+  validate: function (modelName, entity, options, next) {
+    console.warn('Calling deprecated function! Use check instead of validate');
+    return this.check(modelName, entity, options, next);
+  },
+
+  // Check if entity pass modelName's validation
+  check: function (modelName, entity, options, next) {
+    if (typeof options === 'function') next = options;
+    if (!options) options = {};
+
+    var modelObject = this.registeredModels[modelName];
+
+    if (typeof modelName === 'object') {
+      modelObject = deepLook(modelName, this.types);
+    } else if (this.types[modelName]) {
+      if (options.one) this.types[modelName].one = options.one;
+      var result = this.types[modelName].check(entity) ? null : { notMatched: modelName };
+      return typeof next === 'function' ? next(result) : result;
+    }
+
+    var errors = validateObjectRequired(
+      options, modelObject, entity, [],
+      validateObjectEntity(modelObject, entity)
+    );
+    if (!errors.text[0]) errors = {};
+    if (errors && errors.text) errors.text = errors.text.join('. ');
+
+    if (typeof next === 'function') {
+      next(Object.keys(errors).length ? errors : null);
+    } else {
+      return Object.keys(errors).length ? errors : {};
+    }
+  },
+
+  valid: function (modelName, entity, options) {
+    var result = this.check(modelName, entity, options);
+    return Object.keys(result) == 0 || !result;
+  },
+
+  getAllTypes: function () {
+    return Object.keys(this.types);
+  },
+
+  // Get one example for type
+  getExample: function (type) {
+    var examples = this.getExamples(type);
+    return examples[0];
+  },
+
+  // Get one random example for type
+  getRandomExample: function (type) {
+    var examples = this.getExamples(type);
+    return examples[Math.floor(Math.random() * examples.length)];
+  },
+
+  // Get all examples for type
+  // Result: Array
+  getExamples: function (type) {
+    return this.types[type] ? this.types[type].examples : [];
+  },
+
+  // 'Forget' about all registered models
+  dispose: function () {
+    this.registeredModels = [];
+    return 1;
+  },
+
 };
-
-exports.getAllTypes = function () {
-  return Object.keys(this.types);
-};
-
-// Get one example for type
-exports.getExample = function (type) {
-  var examples = this.getExamples(type);
-  return examples[0];
-};
-
-// Get one random example for type
-exports.getRandomExample = function (type) {
-  var examples = this.getExamples(type);
-  return examples[Math.floor(Math.random() * examples.length)];
-};
-
-// Get all examples for type
-// Result: Array
-exports.getExamples = function (type) {
-  return this.types[type] ? this.types[type].examples : [];
-};
-
-// 'Forget' about all registered models
-exports.dispose = function () {
-  this.registeredModels = [];
-  return 1;
-};
-

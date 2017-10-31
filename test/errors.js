@@ -5,22 +5,22 @@ var should = require('chai').should();
 describe('2valid errors', function () {
 
     beforeEach(function () {
-        this.vm = require('../index');
+        this.v = require('../index');
       });
 
     afterEach(function () {
-        this.vm = null;
+        this.v = null;
       });
 
     describe('Errors while registration', function () {
         it('register new bad model', function () {
-            this.vm.registerModel().should.equal('Name is not defined');
-            this.vm.registerModel('noObj').should.equal('Model in noObj is not defined');
+            this.v.registerModel().should.equal('Name is not defined');
+            this.v.registerModel('noObj').should.equal('Model in noObj is not defined');
           });
 
         it('register same name model', function () {
-            this.vm.registerModel('sameName', { id: { type: 'integer' } });
-            this.vm.registerModel('sameName', { name: { type: 'string' } })
+            this.v.registerModel('sameName', { id: { type: 'integer' } });
+            this.v.registerModel('sameName', { name: { type: 'string' } })
               .should.equal('Model sameName is already registered');
           });
       });
@@ -32,7 +32,7 @@ describe('2valid errors', function () {
 
         it('notype model error', function (done) {
             try {
-              this.vm.validate(userModel, { id: 111 }, function () { should.fail(); });
+              this.v.check(userModel, { id: 111 }, function () { should.fail(); });
             }
             catch (err) {
               err.should.eql(Error('No type notype in Types: key id'));
@@ -47,7 +47,7 @@ describe('2valid errors', function () {
           };
         it('in registerModel', function (done) {
             try {
-              this.vm.registerModel('userPassMin', userModel);
+              this.v.registerModel('userPassMin', userModel);
             }
             catch (err) {
               (err instanceof Error).should.equal(true);
@@ -65,7 +65,7 @@ describe('2valid errors', function () {
           };
         it('in registerModel', function (done) {
             try {
-              this.vm.registerModel('userPassMax', userModel);
+              this.v.registerModel('userPassMax', userModel);
             }
             catch (err) {
               (err instanceof Error).should.equal(true);

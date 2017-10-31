@@ -5,24 +5,24 @@ var should = require('chai').should();
 describe('2valid tests', function () {
 
     beforeEach(function () {
-        this.vm = require('../index');
+        this.v = require('../index');
       });
 
     afterEach(function () {
-        this.vm = null;
+        this.v = null;
       });
 
     describe('Simple validate', function () {
 
         it('validate passed', function (done) {
-            this.vm.validate('integer', 123, function (err) {
+            this.v.check('integer', 123, function (err) {
                 should.not.exist(err);
                 done();
               });
           });
 
         it('validate failed', function (done) {
-            this.vm.validate('integer', 'aaa', function (err) {
+            this.v.check('integer', 'aaa', function (err) {
                 err.should.eql({ notMatched: 'integer' });
                 done();
               });
@@ -38,7 +38,7 @@ describe('2valid tests', function () {
           };
 
         it('validate passed', function (done) {
-            this.vm.validate(userModel,
+            this.v.check(userModel,
                 { id: 111, name: 'Max Validator' },
                 function (err) {
                     should.not.exist(err);
@@ -47,7 +47,7 @@ describe('2valid tests', function () {
           });
 
         it('validate failed', function (done) {
-            this.vm.validate(userModel,
+            this.v.check(userModel,
                 { id: 'Max', secondName: 'Validator' },
                 function (err) {
                     err.should.eql({ notMatched: { '.id': 'integer' },
@@ -59,7 +59,7 @@ describe('2valid tests', function () {
           });
 
         it('validate failed', function (done) {
-            this.vm.validate(userModel,
+            this.v.check(userModel,
                 { id: 'Max', name: 123 },
                 function (err) {
                     err.should.eql({ notMatched: { '.id': 'integer', '.name': 'string' },
@@ -71,7 +71,7 @@ describe('2valid tests', function () {
           });
 
         it('validate failed', function (done) {
-            this.vm.validate(userModel,
+            this.v.check(userModel,
                 { secondName: 'Validator', pages: 12 },
                 function (err) {
                     err.should.eql({
@@ -87,7 +87,7 @@ describe('2valid tests', function () {
     describe('Model to validate nested and required data', function () {
 
         it('register new model', function (done) {
-            this.vm.registerModel('user', {
+            this.v.registerModel('user', {
                 id:   { type: 'uuid', required: true },
                 name: {
                     first: { type: 'string', min: 1, max: 256, required: true },
@@ -100,7 +100,7 @@ describe('2valid tests', function () {
           });
 
         it('validate passed', function (done) {
-            this.vm.validate('user', {
+            this.v.check('user', {
                 id: '61cecfb4-da43-4b65-aaa0-f1c3be81ec53',
                 name: { first: 'Alex', last: 'Validates', },
                 metadata: { tt1: 1, tt2: 2 },
@@ -111,7 +111,7 @@ describe('2valid tests', function () {
           });
 
         it('validate failed', function (done) {
-            this.vm.validate('user', {
+            this.v.check('user', {
                 id: '61cecfb4-da43-4b65-aaa0-f1c3be81ec53',
                 name: { last: 'Validates', },
                 metadata: { tt1: 1, tt2: 2 },
@@ -128,7 +128,7 @@ describe('2valid tests', function () {
     describe('Model to validate not required data', function () {
 
         it('validate passed', function (done) {
-            this.vm.validate('user', {
+            this.v.check('user', {
                 id: '61cecfb4-da43-4b65-aaa0-f1c3be81ec53',
                 name: { first: 'Alex', last: 'Validates', },
                 metadata: { tt1: 1, tt2: 2 },
@@ -139,7 +139,7 @@ describe('2valid tests', function () {
           });
 
         it('validate failed', function (done) {
-            this.vm.validate('user', {
+            this.v.check('user', {
                 id: '61cecfb4-da43-4b65-aaa0-f1c3be81ec53',
                 name: { last: 'Validates', },
                 metadata: { tt1: 1, tt2: 2 },
@@ -154,14 +154,14 @@ describe('2valid tests', function () {
     describe('Model to validate match data', function () {
 
         it('register model with match data', function (done) {
-            this.vm.registerModel('user_match', {
+            this.v.registerModel('user_match', {
                 name: { type: 'string', match: /^[A-Z]+$/ },
               }).should.be.false;
             done();
           });
 
         it('validate passed', function (done) {
-            this.vm.validate('user_match', {
+            this.v.check('user_match', {
               name: 'ILIKECAPS',
             }, function (err) {
                 should.not.exist(err);
@@ -170,7 +170,7 @@ describe('2valid tests', function () {
           });
 
         it('validate failed', function (done) {
-            this.vm.validate('user_match', {
+            this.v.check('user_match', {
                 name: 'ILIKEcAPS',
               }, function (err) {
                 err.should.eql({ notMatched: { '.name': 'string' },
@@ -184,14 +184,14 @@ describe('2valid tests', function () {
     describe('Model to validate integer data', function () {
 
         it('register model with integer', function (done) {
-            this.vm.registerModel('user_int', {
+            this.v.registerModel('user_int', {
                 id:   { type: 'integer' },
               }).should.be.false;
             done();
           });
 
         it('validate passed', function (done) {
-            this.vm.validate('user_int', {
+            this.v.check('user_int', {
                 id: 123,
               }, function (err) {
                 should.not.exist(err);
@@ -200,7 +200,7 @@ describe('2valid tests', function () {
           });
 
         it('validate passed string', function (done) {
-            this.vm.validate('user_int', {
+            this.v.check('user_int', {
                 id: '123',
               }, function (err) {
                 err.should.eql({ notMatched: { '.id': 'integer' },
@@ -210,7 +210,7 @@ describe('2valid tests', function () {
           });
 
         it('check bad integer data', function (done) {
-            this.vm.validate('user_int', {
+            this.v.check('user_int', {
                 id: 123.1,
               }, function (err) {
                 err.should.eql({ notMatched: { '.id': 'integer' },
@@ -224,14 +224,14 @@ describe('2valid tests', function () {
     describe('Model to validate float data', function () {
 
         it('register model with float', function (done) {
-            this.vm.registerModel('user_float', {
+            this.v.registerModel('user_float', {
                 id:   { type: 'float' },
               }).should.be.false;
             done();
           });
 
         it('validate passed', function (done) {
-            this.vm.validate('user_float', {
+            this.v.check('user_float', {
                 id: 123.321,
               }, function (err) {
                 should.not.exist(err);
@@ -240,7 +240,7 @@ describe('2valid tests', function () {
           });
 
         it('validate passed integer', function (done) {
-            this.vm.validate('user_float', {
+            this.v.check('user_float', {
                 id: 123,
               }, function (err) {
                 should.not.exist(err);
@@ -249,7 +249,7 @@ describe('2valid tests', function () {
           });
 
         it('validate passed string', function (done) {
-            this.vm.validate('user_float', {
+            this.v.check('user_float', {
                 id: '123.321',
               }, function (err) {
                 err.should.eql({ notMatched: { '.id': 'float' },
@@ -263,14 +263,14 @@ describe('2valid tests', function () {
     describe('Model to validate boolean data', function () {
 
         it('register model with boolean', function (done) {
-            this.vm.registerModel('user_bool', {
+            this.v.registerModel('user_bool', {
                 isAlive: { type: 'boolean' },
               }).should.be.false;
             done();
           });
 
         it('validate passed', function (done) {
-            this.vm.validate('user_bool', {
+            this.v.check('user_bool', {
                 isAlive: true,
               }, function (err) {
                 should.not.exist(err);
@@ -279,7 +279,7 @@ describe('2valid tests', function () {
           });
 
         it('validate passed string', function (done) {
-            this.vm.validate('user_bool', {
+            this.v.check('user_bool', {
                 isAlive: false,
               }, function (err) {
                 should.not.exist(err);
@@ -288,7 +288,7 @@ describe('2valid tests', function () {
           });
 
         it('check bad integer data', function (done) {
-            this.vm.validate('user_bool', {
+            this.v.check('user_bool', {
                 isAlive: 123,
               }, function (err) {
                 err.should.eql({ notMatched: { '.isAlive': 'boolean' },
@@ -302,14 +302,14 @@ describe('2valid tests', function () {
     describe('Model to validate password', function () {
 
         it('register model with integer', function (done) {
-            this.vm.registerModel('user_pass', {
+            this.v.registerModel('user_pass', {
                 pass: { type: 'password' },
               }).should.be.false;
             done();
           });
 
         it('validate passed', function (done) {
-            this.vm.validate('user_pass', {
+            this.v.check('user_pass', {
                 pass: 'R2d=',
               }, function (err) {
                 should.not.exist(err);
@@ -318,7 +318,7 @@ describe('2valid tests', function () {
           });
 
         it('validate failed', function (done) {
-            this.vm.validate('user_pass', {
+            this.v.check('user_pass', {
                 pass: 'r2D2',
               }, function (err) {
                 err.should.eql({ notMatched: { '.pass': 'password' },
@@ -332,14 +332,14 @@ describe('2valid tests', function () {
     describe('Model to validate md5', function () {
 
         it('register model with integer', function (done) {
-            this.vm.registerModel('user_pass_md5', {
+            this.v.registerModel('user_pass_md5', {
                 pass: { type: 'md5' },
               }).should.be.false;
             done();
           });
 
         it('validate passed', function (done) {
-            this.vm.validate('user_pass_md5', {
+            this.v.check('user_pass_md5', {
                 pass: '4124bc0a9335c27f086f24ba207a4912',
               }, function (err) {
                 should.not.exist(err);
@@ -348,7 +348,7 @@ describe('2valid tests', function () {
           });
 
         it('string validate failed', function (done) {
-            this.vm.validate('user_pass_md5', {
+            this.v.check('user_pass_md5', {
                 pass: 'r2D2',
               }, function (err) {
                 err.should.eql({ notMatched: { '.pass': 'md5' },
@@ -358,7 +358,7 @@ describe('2valid tests', function () {
           });
 
         it('integer validate failed', function (done) {
-            this.vm.validate('user_pass_md5', {
+            this.v.check('user_pass_md5', {
                 pass: 123,
               }, function (err) {
                 err.should.eql({ notMatched: { '.pass': 'md5' },
@@ -368,7 +368,7 @@ describe('2valid tests', function () {
           });
 
         it('register model with no obj', function (done) {
-            this.vm.registerModel('user_none', { 'none': { some: 'obj' }}).should.be.false;
+            this.v.registerModel('user_none', { 'none': { some: 'obj' }}).should.be.false;
             done();
           });
 

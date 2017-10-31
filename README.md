@@ -12,7 +12,7 @@
 
 ### JavaScript simple data validator
 
- v2.5.4
+ v3.1.1
 
 
 ## Installation
@@ -25,18 +25,24 @@ Check for integer
 
 ```javascript
 var v = require('2valid');
-console.log( v.validate('integer', 111) ); //null
-console.log( v.validate('integer', 'aaa') ); // { notMatched: 'integer' }
+// valid? true/false
+console.log( v.valid('integer', 111) ); // true
+console.log( v.valid('integer', 'aaa') ); // false
+
+// check, what was wrong
+console.log( v.check('integer', 111) ); // null
+console.log( v.check('integer', 'aaa') ); // { notMatched: 'integer' }
 ```
 
-## Usage ( password validator )
+## Usage ( node.js password validator )
 
 Check for password. Minimum 4 chars, at least one caps and one small letter, digit and special
 
 ```javascript
 var v = require('2valid');
-console.log( v.validate('password', 'As1eRR') ); // { notMatched: 'password' }
-console.log( v.validate('password', '!A1e') ); // null
+console.log( v.valid('password', '!A1e') ); // true
+console.log( v.valid('password', 'As1eRR') ); // false
+console.log( v.check('password', 'As1eRR') ); // { notMatched: 'password' }
 ```
 
 Get examples
@@ -45,7 +51,8 @@ Get examples
 var v = require('2valid');
 var example = v.getExample('email');
 console.log( example ); // news@site.com
-console.log( v.validate('email', example) ); // null (email is valid)
+console.log( v.valid('email', example) ); // true (email is valid)
+console.log( v.check('email', example) ); // null (check why email is not valid)
 ```
 
 ## Available types
@@ -67,9 +74,9 @@ console.log( v.validate('email', example) ); // null (email is valid)
 
 ## Results
 
-If validate passed, then result is ```null```.
+If check passed, then result is ```null```.
 
-Otherwise validate result is object with these keys:
+Otherwise check result is object with these keys:
 
 - ```notMatched``` [object] - which key does not match which type
 - ```notRequired``` [array of string] - list of keys are not in model
@@ -96,11 +103,11 @@ Check if integer
 ```javascript
 var v = require('2valid');
 
-v.validate( 'integer', 111, function(err) {
+v.check( 'integer', 111, function(err) {
   console.log(err); //null
 });
 
-v.validate( 'integer', '61cecfb4-da43-4b65-aaa0-f1c3be81ec53', function(err) {
+v.check( 'integer', '61cecfb4-da43-4b65-aaa0-f1c3be81ec53', function(err) {
   console.log(err); // { notMatched: 'integer' }
 });
 ```
@@ -117,7 +124,7 @@ var userModel = {
   name: {type: 'string', required: true}
 };
 
-vm.validate( userModel,
+vm.check( userModel,
   { id: 123, secondName: 'Max Validator' },
   function(err) {
     console.log(err); // null
@@ -137,7 +144,7 @@ var userModel = {
   name: {type: 'string', required: true}
 };
 
-vm.validate( userModel,
+vm.check( userModel,
   { id: 'Max', secondName: 'Validator' },
   function(err) {
     console.log(err);
@@ -167,15 +174,15 @@ v.registerModel('user', {
   name: {type: 'string'}
 });
 
-// object to validate
+// object to check
 var userObject = {id: 123, name: 'Alex Validates'}
 
 // check if object is valid sync
-var valid = v.validate('user', userObject);
+var valid = v.check('user', userObject);
 console.log(valid.text || 'object is valid');
 
 // check if object is valid with callback
-v.validate('user', userObject, function(err) {
+v.check('user', userObject, function(err) {
   console.log(err || 'object is valid');
 });
 ```
@@ -201,15 +208,15 @@ v.registerModel('user', {
 });
 
 // {}
-console.log(v.validate('user', {name: {first: 'Alex', last: 'Validator'}}));
-console.log(v.validate('user', {name: {first: 'Marry'}}));
+console.log(v.check('user', {name: {first: 'Alex', last: 'Validator'}}));
+console.log(v.check('user', {name: {first: 'Marry'}}));
 
 // { notFound: [ '.id', '.name.first' ],
 //   text: 'Field .id not found in registered model. Field .name.first not found in registered model' }
-console.log(v.validate('user', {id: 123}));
+console.log(v.check('user', {id: 123}));
 
 // { notFound: [ '.name.first' ], text: 'Field .name.first not found in registered model' }
-console.log(v.validate('user', {name: {last: 'Alex'}}));
+console.log(v.check('user', {name: {last: 'Alex'}}));
 ```
 
 
@@ -224,11 +231,11 @@ var v = require('2valid');
 v.registerModel('cmyk', {name: { type: 'string', match : /^cyan|magenta|yellow|key$/i }});
 
 // {}
-console.log(v.validate('cmyk', {name: 'Magenta'}));
+console.log(v.check('cmyk', {name: 'Magenta'}));
 
 // { notMatched: { '.name': 'string' }, text: 'Field .name not matched with type string' }
-console.log(v.validate('cmyk', {name: 'black'}));
-console.log(v.validate('cmyk', {name: 123}));
+console.log(v.check('cmyk', {name: 'black'}));
+console.log(v.check('cmyk', {name: 123}));
 ```
 
 
@@ -239,8 +246,8 @@ Only 'cyan', 'magenta', 'yellow' or 'key' can passed in ```cmyk``` model to vali
 ```javascript
 var v = require('2valid');
 
-console.log(v.validate('any', 'yellow', {one: ['cyan', 'magenta', 'yellow', 'key']})); //passed
-console.log(v.validate('any', 123, {one: ['cyan', 'magenta', 'yellow', 'key']})); //{ notMatched: 'any' }
+console.log(v.check('any', 'yellow', {one: ['cyan', 'magenta', 'yellow', 'key']})); //passed
+console.log(v.check('any', 123, {one: ['cyan', 'magenta', 'yellow', 'key']})); //{ notMatched: 'any' }
 ```
 
 
@@ -255,14 +262,14 @@ var v = require('2valid');
 v.registerModel('user', {id: { type: 'uuid', required: true }});
 
 // {}
-console.log(v.validate('user', {id: '61cecfb4-da43-4b65-aaa0-f1c3be81ec53'}));
+console.log(v.check('user', {id: '61cecfb4-da43-4b65-aaa0-f1c3be81ec53'}));
 
 // { notMatched: { '.id': 'uuid' }, text: 'Field .id not matched with type uuid' }
-console.log(v.validate('user', {id: 123}));
+console.log(v.check('user', {id: 123}));
 
 // { notFound: [ '.name', '.id' ],
 //   text: 'Field .name not found in registered model. Field .id not found in registered model' }
-console.log(v.validate('user', {name: 'Alex'}));
+console.log(v.check('user', {name: 'Alex'}));
 ```
 
 
@@ -277,12 +284,12 @@ var v = require('2valid');
 v.registerModel('ISO 3166-2', {name: { type: 'string', min: 2, max: 2 }});
 
 // {}
-console.log(v.validate('ISO 3166-2', {name: 'US'}));
+console.log(v.check('ISO 3166-2', {name: 'US'}));
 
 // { notMatched: { '.name': 'string' }, text: 'Field .name not matched with type string' }
-console.log(v.validate('ISO 3166-2', {name: 123}));
-console.log(v.validate('ISO 3166-2', {name: 'USA'}));
-console.log(v.validate('ISO 3166-2', {name: 'U'}));
+console.log(v.check('ISO 3166-2', {name: 123}));
+console.log(v.check('ISO 3166-2', {name: 'USA'}));
+console.log(v.check('ISO 3166-2', {name: 'U'}));
 ```
 
 
@@ -317,8 +324,9 @@ password : {
 
 ## Module description
 ### Methods and properties of 2valid
+- valid( modelName, entity ) - validate model modelName with entity. Return true if validate is ok. Otherwise, return false.
+- check( modelName, entity [, callback] ) - validate model modelName with entity. Return empty object if validate is ok. As callback, return error as first argument.
 - registerModel( modelName, modelObject ) - register model modelName with modelObject to check
-- validate( modelName, entity [, callback] ) - validate model modelName with entity. Return empty object if validate is ok. As callback, return error as first argument.
 - registeredModels - list of registered models
 - showModelsFull() - show full information of registered model
 - dispose() - remove all registered modelNames
@@ -339,7 +347,7 @@ v.registerModel( 'user', {
 ## Validate object
 
 ```javascript
-v.validate( 'user', { id : '61cecfb4-da33-4b15-aa10-f1c6be81ec53', name : 'Validator', password : 'A1z!' })
+v.check( 'user', { id : '61cecfb4-da33-4b15-aa10-f1c6be81ec53', name : 'Validator', password : 'A1z!' })
 ```
 
 
@@ -363,7 +371,7 @@ myLibrary.registerModel( 'modelName', { id: { type: 'name' } } );
 
 - No field 'name' in key 'name' in model 'modelName'
 ```javascript
-myLibrary.consoleTrueOrError ( myLibrary.validate( 'modelName', { name  : 'Alex Validates' }) );
+myLibrary.consoleTrueOrError ( myLibrary.check( 'modelName', { name  : 'Alex Validates' }) );
 ```
 
 - No type field exception
@@ -390,6 +398,7 @@ myLibrary.registerModel( 'name_exception', { id: { type: 'guid' } } );
 * 2.0.1 Rename project to 2valid
 * 2.2.1 Add boolean and array types
 * 2.2.2 Add examples
+* 3.0.1 Add check function instead of depricateded validate
 
 
 ## Created by
